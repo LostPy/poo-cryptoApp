@@ -18,3 +18,7 @@ class Transaction:
         self.currency_received = received[0]
         self.currency_received = received[1]
         self.date = date
+
+    @classmethod
+    def from_id(cls, id_: int):
+        pass
