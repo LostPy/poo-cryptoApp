@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from . import Transaction, CryptoCurrency
+from . import Cryptocurrency, Transaction
 
 
 class Portofolio:
@@ -18,5 +18,5 @@ class Portofolio:
     def get_transaction_by_id(self, id_: int) -> Transaction:
         pass
 
-    def get_transaction_by_crypto(crypto: CryptoCurrency) -> CryptoCurrency:
+    def get_transaction_by_crypto(crypto: Cryptocurrency) -> Cryptocurrency:
         pass
