@@ -1,3 +1,6 @@
+import sys
+sys.PATH.append("..")
+
 from crypto_common.db import CryptoDatabase
 
 

@@ -1,18 +1,39 @@
+"""Module with function to create SQL instructions.
+
+Examples
+--------
+
+To create a table:
+```python
+create_table(
+    name="User",
+    columns=[
+        "idUser INTEGER PRIMARY KEY",
+        "name VARCHAR(20) NOT NULL",
+    ]
+)
+```
+"""
+
+# Template for `CREATE TABLE` instruction
 CREATE_TABLE = """CREATE TABLE {name}
 ({columns})
 """
 
+# Template for `INSERT` instruction
 INSERT = """INSERT INTO {table} ({columns})
 VALUES ({values})
 """
 
+# Template for `UPDATE` instruction
 UPDATE = """UPDATE {table}
 SET {values}
 """
 
+# Template for `SELECT` instruction
 SELECT = """SELECT ({columns}) FROM {table}"""
-ORDER_BY = """ORDER BY {column}"""
-WHERE = """WHERE {conditions}"""
+ORDER_BY = """ORDER BY {column}"""  # Template for `ORDER_BY` instruction
+WHERE = """WHERE {conditions}"""  # Template for `WHERE` instruction
 
 
 def list_to_str(list_: list, str_in_items: bool = False) -> str:
@@ -22,6 +43,9 @@ def list_to_str(list_: list, str_in_items: bool = False) -> str:
     ----------
     list_ : list[Any]
         A list of items to convert into str
+    str_in_items : bool, optional
+        If True and there is str objects in the list, \
+        add `"` for these objects in the string.
 
     Returns
     -------
@@ -29,7 +53,7 @@ def list_to_str(list_: list, str_in_items: bool = False) -> str:
         The comma separated list of items
     """
     return ', '.join([
-        f"'{e}'" if str_in_items and isinstance(e, str) and not e.startswith("'")
+        f"\"{e}\"" if str_in_items and isinstance(e, str) and not e.startswith("'")
         else str(e)
         for e in list_
     ])
@@ -74,7 +98,7 @@ def create_table(name: str, columns: list[str]) -> str:
     return CREATE_TABLE.format(name=name, columns=list_to_str(columns))
 
 
-def insert(table: str, columns: list[str], values: list) -> str:
+def insert(table: str, columns: list[str]) -> str:
     """Returns SQL instructions for an `UPDATE`
 
     Parameters
@@ -83,8 +107,6 @@ def insert(table: str, columns: list[str], values: list) -> str:
         The table's name
     columns : list[str]
         The list of columns in order of values
-    values : list
-        The list of values (corresponding to the list of columns)
 
     Returns
     -------
@@ -94,7 +116,7 @@ def insert(table: str, columns: list[str], values: list) -> str:
     return INSERT.format(
         table=table,
         columns=list_to_str(columns),
-        values=list_to_str(values, str_in_items=True)
+        values=('?, ' * len(columns)).removesuffix(', ')
     )
 
 
@@ -118,7 +140,7 @@ def update(table: str, values: dict, *, where: str = "") -> str:
     return UPDATE.format(table=table, values=dict_to_str(values))
 
 
-def select(table: str, columns: list[str], *,
+def select(table: str, columns: list[str], /,
            where: str = "", order_by: str = "") -> str:
     """Returns SQL instructions for a `SELECT`
 
@@ -142,15 +164,17 @@ def select(table: str, columns: list[str], *,
            f"{where} {order_by}"
 
 
-def where(conditions: dict[str, tuple[str, str]]) -> str:
+def where(conditions: dict[str, str]) -> str:
     """Return SQL instructions for a `WHERE` clause.
 
     Parameters
     ----------
-    conditions : dict[str, tuple[str, str]]
+    conditions : dict[str, str]
         A dictionary with conditions: \
-        keys are the column names and values are a tuple (operator, value).
-        Example: ```{
+        keys are the column names and values are the operator to use.
+        Example:
+        ```python
+        {
             "ColumnA": ('>', 10),
             "ColumnB": ("IN", "('a', 'b', 'c'')")
         }
