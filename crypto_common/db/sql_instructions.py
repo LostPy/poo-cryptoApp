@@ -15,6 +15,9 @@ create_table(
 ```
 """
 
+from typing import Union
+
+
 # Template for `CREATE TABLE` instruction
 CREATE_TABLE = """CREATE TABLE {name}
 ({columns})
@@ -30,13 +33,17 @@ UPDATE = """UPDATE {table}
 SET {values}
 """
 
+DELETE = """DELETE FROM {table}
+{where}
+"""
+
 # Template for `SELECT` instruction
-SELECT = """SELECT ({columns}) FROM {table}"""
+SELECT = """SELECT {columns} FROM {table}"""
 ORDER_BY = """ORDER BY {column}"""  # Template for `ORDER_BY` instruction
 WHERE = """WHERE {conditions}"""  # Template for `WHERE` instruction
 
 
-def list_to_str(list_: list, str_in_items: bool = False) -> str:
+def list_to_str(list_: list, str_in_items: bool = False, /, sep_char: str = ", ") -> str:
     """Convert a list into a str (comma separated list).
 
     Parameters
@@ -46,20 +53,22 @@ def list_to_str(list_: list, str_in_items: bool = False) -> str:
     str_in_items : bool, optional
         If True and there is str objects in the list, \
         add `"` for these objects in the string.
+    sep_char : str, optional, keyword only
+        The separator of items
 
     Returns
     -------
     str
         The comma separated list of items
     """
-    return ', '.join([
+    return sep_char.join([
         f"\"{e}\"" if str_in_items and isinstance(e, str) and not e.startswith("'")
         else str(e)
         for e in list_
     ])
 
 
-def dict_to_str(d: dict, separator: str = '=') -> str:
+def dict_to_str(d: dict, *, separator: str = '=', sep_items: str = ", ") -> str:
     """Convert a dictionary into a comma separated list of pair `key{separator}value`
 
     Parameters
@@ -68,13 +77,15 @@ def dict_to_str(d: dict, separator: str = '=') -> str:
         The dictionary to convert into str
     separator : str, optional
         The separator of key/value to use (default: `"="`)
+    sep_items : str, optional, keyword only
+        The separator of items
 
     Returns
     -------
     str
         The comma separated list of pair key / value
     """
-    return ', '.join([
+    return sep_items.join([
         f"""{column}{separator}{f"'{value}'" if isinstance(value, str) else value}"""
         for column, value in d.items()
     ])
@@ -98,7 +109,7 @@ def create_table(name: str, columns: list[str]) -> str:
     return CREATE_TABLE.format(name=name, columns=list_to_str(columns))
 
 
-def insert(table: str, columns: list[str]) -> str:
+def insert(table: str, columns: list[str], values: list = None) -> str:
     """Returns SQL instructions for an `UPDATE`
 
     Parameters
@@ -113,22 +124,28 @@ def insert(table: str, columns: list[str]) -> str:
     str
         The SQL instruction
     """
+    if values is not None:
+        values = list_to_str(values, str_in_items=True)
+    else:
+        values = ('?, ' * len(columns)).removesuffix(', ')
+
     return INSERT.format(
         table=table,
         columns=list_to_str(columns),
-        values=('?, ' * len(columns)).removesuffix(', ')
+        values=values
     )
 
 
-def update(table: str, values: dict, *, where: str = "") -> str:
+def update(table: str, values: Union[list, dict], /, where: str = "") -> str:
     """Returns SQL instructions for an `UPDATE`
 
     Parameters
     ----------
     table : str
         The table's name
-    values : dict
-        values to update, in key the column's name and in value the new value
+    values : Union[list, dict]
+        values to update, if is a dict, keys are column's name and \
+        values are the new value, if is a list, the elements are column names.
     where : str, optional
         The `WHERE` clause
 
@@ -137,10 +154,33 @@ def update(table: str, values: dict, *, where: str = "") -> str:
     str
         The SQL instruction
     """
-    return UPDATE.format(table=table, values=dict_to_str(values))
+    if isinstance(values, dict):
+        values = dict_to_str(values)
+    else:
+        values = ', '.join([f'{column}=?' for column in values])
+    return f"{UPDATE.format(table=table, values=values)}"\
+           f"{where}"
 
 
-def select(table: str, columns: list[str], /,
+def delete(table: str, where: str) -> str:
+    """Returns SQL instructions for an `DELETE`
+
+    Parameters
+    ----------
+    table : str
+        The table's name
+    where : str
+        The `WHERE` clause
+
+    Returns
+    -------
+    str
+        The SQL instruction
+    """
+    return DELETE.format(table=table, where=where)
+
+
+def select(table: str, columns: list[str], *,
            where: str = "", order_by: str = "") -> str:
     """Returns SQL instructions for a `SELECT`
 
@@ -164,7 +204,7 @@ def select(table: str, columns: list[str], /,
            f"{where} {order_by}"
 
 
-def where(conditions: dict[str, str]) -> str:
+def where(conditions: dict[str, tuple[str, str]]) -> str:
     """Return SQL instructions for a `WHERE` clause.
 
     Parameters
@@ -186,10 +226,10 @@ def where(conditions: dict[str, str]) -> str:
         The instructions for the `WHERE`
     """
     list_conditions = [
-        f"""{column}{operator}{f"'{value}'" if isinstance(value, str) else value}"""
+        f"""{column} {operator} {f"'{value}'" if isinstance(value, str) else value}"""
         for column, (operator, value) in conditions.items()
     ]
-    return WHERE.format(conditions=list_to_str(list_conditions))
+    return WHERE.format(conditions=list_to_str(list_conditions, sep_char=' AND '))
 
 
 def order_by(column: str) -> str:

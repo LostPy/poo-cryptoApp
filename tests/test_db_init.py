@@ -1,5 +1,7 @@
+import os.path
 import sys
-sys.PATH.append("..")
+sys.path.append(os.path.abspath("../poo-crypto-common"))
+print(sys.path)
 
 from crypto_common.db import CryptoDatabase
 
