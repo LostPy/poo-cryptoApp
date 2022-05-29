@@ -4,6 +4,10 @@ from datetime import datetime
 import sqlite3
 import __main__  # to get the path of __main__ (Python file executed)
 
+from PySide6.QtCore import QFile, QIODevice
+
+from ressources import scripts_rc
+
 from .. import errors
 from .sql_instructions import (
     create_table,
@@ -422,6 +426,20 @@ class CryptoDatabase:
         if commit:
             self.connection.commit()
 
+    def commit(self):
+        """Commit change"""
+        self.connection.commit()
+
+    def open(self):
+        """Close the current connection if it's opened and create a new connection."""
+        self.close()
+        self.connection = sqlite3.connect(self.PATH.resolve())
+        self.connection.row_factory = _dict_factory
+
+    def close(self):
+        """Close the connection to the database."""
+        self.connection.close()
+
     @classmethod
     def init_database(cls, remove_existing: bool = False):
         """Initialize the database.
@@ -442,58 +460,13 @@ class CryptoDatabase:
         conn = sqlite3.connect(cls.PATH)
         cursor = conn.cursor()
 
-        cursor.execute(create_table(
-            "Portofolio",
-            [
-                "idPortofolio integer PRIMARY KEY",
-                "name text NOT NULL",
-                "password text NOT NULL"
-            ]
-        ))
-        cursor.execute(create_table(
-            "Currency",
-            [
-                "idCurrency text PRIMARY KEY",
-                "name text NOT NULL",
-                "ticker text",
-                "price real",
-                "logo text",
-                "circulatingSupply integer",
-                "rank integer",
-                "isCrypto boolean NOT NULL CHECK (isCrypto IN (0, 1))"
-            ]
-        ))
-        cursor.execute(create_table(
-            "CryptoTransaction",
-            [
-                "idTransaction integer PRIMARY KEY",
-                "date timestamp",
-                "amountSend real",
-                "amountReceived real",
-                "currencySend integer NOT NULL",
-                "currencyReceived integer NOT NULL",
-                "portofolio integer NOT NULL",
-                "FOREIGN KEY (currencySend) REFERENCES Currency(idCurrency)",
-                "FOREIGN KEY (currencyReceived) REFERENCES Currency(idCurrency)",
-                "FOREIGN KEY (portofolio) REFERENCES Portofolio(idPortofolio)"
-            ]
-        ))
+        script_file = QFile(":/sql/init_db")
+        script_file.open(QIODevice.ReadOnly | QIODevice.Text)
+        cursor.executescript(str(script_file.readAll(), 'utf-8'))
+        script_file.close()
 
-        cursor.executemany(
-            insert("Currency", ["idCurrency", "name", "ticker", "isCrypto"]),
-            cls.BASE_CURRENCIES
-        )
         conn.commit()
         conn.close()
-
-    def open(self):
-        """Close the current connection if it's opened and create a new connection."""
-        self.close()
-        self.connection = sqlite3.connect(self.PATH.resolve())
-
-    def close(self):
-        """Close the connection to the database."""
-        self.connection.close()
 
     @classmethod
     def remove(cls):
