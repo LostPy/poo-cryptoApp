@@ -12,15 +12,35 @@ class Portofolio(NameableObject):
     def __init__(self, id_: int, name: str, password: str):
         super().__init__(id_, name)
         self.password: str = password
+        self.currencies = dict()
+        self.load_currencies()
 
-    def get_transactions(self, start: datetime, end: datetime) -> list[Transaction]:
-        pass
+    def get_transactions(self,
+                         database: CryptoDatabase,
+                         start: datetime = None,
+                         end: datetime = None) -> list[Transaction]:
+        if start is None and end is None:
+            range_date = None
+        else:
+            range_date = (start, end)
+        return Transaction.from_filter(self.id, database, range_date=range_date)
 
-    def get_transaction_by_id(self, id_: int) -> Transaction:
-        pass
+    def get_transactions_filtered(self,
+                                  database: CryptoDatabase,
+                                  **kwargs) -> list[Transaction]:
+        return Transaction.from_filter(self.id, database, **kwargs)
 
-    def get_transaction_by_crypto(crypto: Cryptocurrency) -> Cryptocurrency:
-        pass
+    def load_currencies(self, database: CryptoDatabase):
+        self.currencies = {
+            Cryptocurrency.from_db_dict(result): result['amount']
+            for result in database.get_currencies_portofolios(self.id)
+        }
+
+    def upload_currencies_in_db(self, database: CryptoDatabase):
+        for currency, amount in self.currencies:
+            database.update_currency_portofolio(
+                self.id, currency.id, amount, commit=False)
+        database.commit()
 
     @classmethod
     def new_portofolio(cls, name: str, password: str, database: CryptoDatabase):

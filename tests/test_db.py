@@ -67,6 +67,7 @@ db.insert_currencies(CURRENCIES, commit=False)
 portofolio_id = db.insert_portofolio(PORTOFOLIO)
 TRANSACTION['portofolio_id'] = portofolio_id
 db.insert_transaction(TRANSACTION)
+db.insert_currency_portofolio(portofolio_id, "bitcoin", 100)
 print("data inserted")
 
 # Select
@@ -97,6 +98,11 @@ print(transaction_by_id)
 print(transactions_filtered)
 print(transactions_filtered_2)
 
+
+currency_portofolio = db.get_currencies_portofolios(1)
+print(currency_portofolio)
+
+
 # Update
 # ----------
 
@@ -120,10 +126,14 @@ db.update_transaction(transaction_update)
 transaction_by_id = db.get_transaction_by_id(1)
 print(transaction_by_id)
 
+db.update_currency_portofolio(1, 'bitcoin', 20)
+print(db.get_currencies_portofolios(1))
+
 # Delete
 # ----------
 db.delete_currencies(['bitcoin'])
 db.delete_transactions([1])
+db.delete_currency_portofolio(1, 'bitcoin')
 db.delete_portofolio(1)
 
 currency_by_id = db.get_currency_by_id("bitcoin")
@@ -132,6 +142,7 @@ portofolio_by_id = db.get_portofolio_by_id(1)
 print(currency_by_id)
 print(transaction_by_id)
 print(portofolio_by_id)
+print(db.get_currencies_portofolios(1))
 
 # Remove database
 db.close()

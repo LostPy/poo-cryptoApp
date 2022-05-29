@@ -93,6 +93,19 @@ class CryptoDatabase:
             return cursor.fetchone()
         return cursor.fetchall()
 
+    def get_currencies_portofolios(self,
+                                   portofolio_id: int) -> list[dict]:
+        cursor = self.connection.cursor()
+        cursor.execute("""
+            SELECT idCurrency, name, ticker, price,
+                   logo, circulatingSupply, rank, isCrypto, amount
+            FROM PortofoliosCurrencies
+            INNER JOIN Currency ON PortofoliosCurrencies.currency = Currency.idCurrency
+            WHERE portofolio=?
+            """,
+            (portofolio_id, ))
+        return cursor.fetchall()
+
     def get_transactions(self,
                          where: str = "",
                          where_args: tuple = None,
@@ -164,8 +177,8 @@ class CryptoDatabase:
     def get_transactions_filter(self, portofolio_id: int, /,
                                 currency_send_id: int = None,
                                 currency_receive_id: int = None,
-                                range_amount_send: tuple[int, int] = None,
-                                range_amount_received: tuple[int, int] = None,
+                                range_amount_send: tuple[float, float] = None,
+                                range_amount_received: tuple[float, float] = None,
                                 range_date: tuple[datetime, datetime] = None) -> list[dict]:
         filter_ = dict(portofolio=("=", portofolio_id))
 
@@ -303,6 +316,21 @@ class CryptoDatabase:
 
         return id_
 
+    def insert_currency_portofolio(self,
+                                   portofolio_id: int,
+                                   currency_id: str,
+                                   amount: float,
+                                   commit: bool = True):
+        sql_instruction = insert(
+            "PortofoliosCurrencies",
+            ['portofolio', 'currency', 'amount'])
+
+        cursor = self.connection.cursor()
+        cursor.execute(sql_instruction, (portofolio_id, currency_id, amount))
+
+        if commit:
+            self.connection.commit()
+
     def insert_transaction(self, transaction: dict, commit: bool = True):
         sql_instruction = insert(
             'CryptoTransaction',
@@ -377,6 +405,22 @@ class CryptoDatabase:
         if commit:
             self.connection.commit()
 
+    def update_currency_portofolio(self,
+                                   portofolio_id: int,
+                                   currency_id: str,
+                                   amount: float,
+                                   commit: bool = True):
+        sql_instruction = update(
+            "PortofoliosCurrencies",
+            ['amount'],
+            where="WHERE portofolio=? AND currency=?")
+
+        cursor = self.connection.cursor()
+        cursor.execute(sql_instruction, (amount, portofolio_id, currency_id))
+
+        if commit:
+            self.connection.commit()
+
     def update_transaction(self, transaction: dict, commit: bool = True):
         sql_instruction = update(
             'CryptoTransaction',
@@ -415,6 +459,19 @@ class CryptoDatabase:
     def delete_portofolio(self, id_: int, commit: bool = True):
         cursor = self.connection.cursor()
         cursor.execute(delete('Portofolio', "WHERE idPortofolio=?"), (id_, ))
+        cursor.execute(delete('PortofoliosCurrencies', "WHERE portofolio=?"), (id_, ))
+        cursor.execute(delete('CryptoTransaction', "WHERE portofolio=?"), (id_, ))
+        if commit:
+            self.connection.commit()
+
+    def delete_currency_portofolio(self,
+                                   portofolio_id: int,
+                                   currency_id: str,
+                                   commit: bool = True):
+        sql_instruction = delete(
+            'PortofoliosCurrencies', "WHERE portofolio=? AND currency=?")
+        cursor = self.connection.cursor()
+        cursor.execute(sql_instruction, (portofolio_id, currency_id))
         if commit:
             self.connection.commit()
 

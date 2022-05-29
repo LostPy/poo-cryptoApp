@@ -34,15 +34,19 @@ class Cryptocurrency(Currency):
         pass
 
     @classmethod
+    def from_db_dict(cls, d: dict):
+        return cls(
+            d['idCurrency'],
+            name=d['name'],
+            ticker=d['ticker'],
+            price=d['price'],
+            logo=d['logo'],
+            circulating_supply=d['circulatingSupply'],
+            rank=d['rank']
+        )
+
+    @classmethod
     def from_db(cls, id_: str, database: CryptoDatabase):
         result = database.get_currency_by_id(id_.lower())
         if result is not None:
-            return cls(
-                result['idCurrency'],
-                name=result['name'],
-                ticker=result['ticker'],
-                price=result['price'],
-                logo=result['logo'],
-                circulating_supply=result['circulatingSupply'],
-                rank=result['rank']
-            )
+            return cls.from_db_dict(result)
