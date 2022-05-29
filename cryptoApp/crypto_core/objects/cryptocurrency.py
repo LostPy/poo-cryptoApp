@@ -1,6 +1,6 @@
 
-from crypto_common.crypto_api import get_trending
-from crypto_common.db import CryptoDatabase
+from ..crypto_api import get_trending
+from ..db import CryptoDatabase
 from . import Currency
 
 

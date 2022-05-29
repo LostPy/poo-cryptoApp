@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from . import Currency
-from crypto_common.db import CryptoDatabase
+from ..db import CryptoDatabase
 
 
 class Transaction:
