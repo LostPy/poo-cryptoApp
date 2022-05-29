@@ -4,7 +4,7 @@ from datetime import datetime
 import sqlite3
 import __main__  # to get the path of __main__ (Python file executed)
 
-from crypto_common import errors
+from .. import errors
 from .sql_instructions import (
     create_table,
     insert,
