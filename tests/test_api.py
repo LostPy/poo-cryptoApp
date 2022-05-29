@@ -1,4 +1,9 @@
-from crypto_common.crypto_api import *
+import os.path
+import sys
+sys.path.append(os.path.abspath("../poo-crypto-common/cryptoApp"))
+print(sys.path)
+
+from crypto_core.crypto_api import *
 import matplotlib.pyplot as plt
 from datetime import datetime
 

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from . import Cryptocurrency, Transaction
+from crypto_common.db import CryptoDatabase
 
 
 class Portofolio:
@@ -20,3 +21,9 @@ class Portofolio:
 
     def get_transaction_by_crypto(crypto: Cryptocurrency) -> Cryptocurrency:
         pass
+
+    @classmethod
+    def from_db(cls, id_: int, database: CryptoDatabase):
+        result = database.get_portofolio_by_id(id_)
+        if result is not None:
+            return cls(id_, result['name'], result['password'])

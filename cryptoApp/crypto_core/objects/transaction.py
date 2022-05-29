@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from . import Currency
+from crypto_common.db import CryptoDatabase
 
 
 class Transaction:
@@ -20,5 +21,12 @@ class Transaction:
         self.date = date
 
     @classmethod
-    def from_id(cls, id_: int):
-        pass
+    def from_id(cls, id_: int, database: CryptoDatabase):
+        result = database.get_transaction_by_id(id_)
+        if result is not None:
+            return cls(
+                id_,
+                send=(result['currencySend'], result['amountSend']),
+                received=(result['currencyReceived'], result['amountReceived']),
+                date=result['date']
+            )

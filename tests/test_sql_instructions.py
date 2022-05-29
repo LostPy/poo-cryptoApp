@@ -1,9 +1,9 @@
 import os.path
 import sys
-sys.path.append(os.path.abspath("../poo-crypto-common"))
+sys.path.append(os.path.abspath("../poo-crypto-common/cryptoApp"))
 print(sys.path)
 
-from crypto_common.db.sql_instructions import *
+from crypto_core.db.sql_instructions import *
 
 
 print(create_table("User", ["idUser", "name", "password"]))
