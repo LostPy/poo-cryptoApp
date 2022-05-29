@@ -1,10 +1,10 @@
 """Class to define a currency
 """
+from . import NameableObject
 
 
-class Currency:
+class Currency(NameableObject):
     """Define the currency"""
 
     def __init__(self, id_: int, name: str):
-        self.name = name
-        self.id = id_
+        super().__init__(id_, name)

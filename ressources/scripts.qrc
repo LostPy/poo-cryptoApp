@@ -1,0 +1,6 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="sql">
+        <file alias="init_db">scripts/script_init_db.sql</file>
+    </qresource>
+</RCC>
