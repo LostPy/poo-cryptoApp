@@ -6,10 +6,11 @@ Une application pour enregistrer ses transactions de cryptomonaies et visualiser
 ## Requirements
 
  * Python3.9+
- * PySide6
+ * PySide6 (GUI)
  * pandas
+ * matplotlib (for CLI)
  * pycoingecko
- * colorama
+ * colorama (for colored logs)
 
 Créer un environnement virtuel :
 
@@ -34,5 +35,5 @@ pip install -r requirements.txt
 Exécuter avec Python `main.py` :
 
 ```
-python3.9 cryptoApp/main.py
+python cryptoApp/main.py
 ```

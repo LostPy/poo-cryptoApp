@@ -1,4 +1,5 @@
 PySide6
 pycoingecko
 pandas
+matplotlib
 colorama
