@@ -1,4 +1,5 @@
 from datetime import datetime
+import operator as op
 
 from . import Currency
 from ..db import CryptoDatabase
@@ -19,6 +20,48 @@ class Transaction:
         self.currency_received = received[0]
         self.currency_received = received[1]
         self.date = date
+
+    def __compare(self, other, operator) -> bool:
+        """Compare self to other with the operator specified.
+
+        Parameters
+        ----------
+        other : Transaction
+            A other transaction to compare with self
+        operator : function
+            operator to use
+
+        Returns
+        -------
+        bool
+            The result of the operation
+
+        Raises
+        ------
+        ValueError
+            Raised if other is not an instance of Transaction
+        """
+        if not isinstance(other, Transaction):
+            raise ValueError(f"Can't compare a Transaction with a '{type(other)}'")
+        return operator(self.date, other.date)
+
+    def __eq__(self, o: object) -> bool:
+        return self.__compare(o, op.eq)
+
+    def __ne__(self, o: object) -> bool:
+        return self.__compare(o, op.ne)
+
+    def __gt__(self, o: object) -> bool:
+        return self.__compare(o, op.gt)
+
+    def __ge__(self, o: object) -> bool:
+        return self.__compare(o, op.ge)
+
+    def __lt__(self, o: object) -> bool:
+        return self.__compare(o, op.lt)
+
+    def __le__(self, o: object) -> bool:
+        return self.__compare(o, op.le)
 
     @classmethod
     def from_filter(cls, portofolio_id: int, database: CryptoDatabase,
