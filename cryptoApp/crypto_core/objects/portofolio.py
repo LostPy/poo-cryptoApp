@@ -13,7 +13,6 @@ class Portofolio(NameableObject):
         super().__init__(id_, name)
         self.password: str = password
         self.currencies = dict()
-        self.load_currencies()
 
     def get_transactions(self,
                          database: CryptoDatabase,
