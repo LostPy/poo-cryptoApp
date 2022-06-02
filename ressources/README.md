@@ -4,6 +4,10 @@ Les ressources Qt permettent d'ajouter des ressources qui sont compilés avec le
 
 Les ressources utilisés par l'application sont placés dans ce dossier (dans des sous dossier où non).
 
+## Icons
+
+Les icons proviennent de [RemixIcon](https://remixicon.com/) et sont sous la license Apache V2.
+
 ## Déclarer les ressources pour Qt
 
 Pour déclarer les ressources utilisées par l'application Qt, il est nécessaire d'utiliser un fichier QRC (Qt Ressource) qui aura ce format :
