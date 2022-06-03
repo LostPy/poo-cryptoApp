@@ -63,14 +63,34 @@ class Transaction:
     def __le__(self, o: object) -> bool:
         return self.__compare(o, op.le)
 
+    def delete(self, database: CryptoDatabase, commit: bool = True):
+        """Delete the transaction from the database."""
+        return database.delete_transactions([self.id], commit=commit)
+
+    @staticmethod
+    def multi_delete(transactions: list, database: CryptoDatabase, commit: bool = True):
+        """Delete a list of transactions from the database."""
+        return database.delete_transactions([t.id for t in transactions], commit=commit)
+
     @classmethod
-    def from_filter(cls, portofolio_id: int, database: CryptoDatabase,
-                    currency_send: Currency,
-                    currency_received: Currency,
+    def from_filter(cls, portofolio_id: int, database: CryptoDatabase, /,
+                    currency_send: Currency = None,
+                    currency_received: Currency = None,
                     **kwargs) -> list:
-        kwargs['currency_send_id'] = currency_send.id
-        kwargs['currency_received_id'] = currency_received.id
-        return database.get_transactions_filter(portofolio_id, **kwargs)
+        """Returns the list of transactions with conditions passed in parameters."""
+        if currency_send is not None:
+            kwargs['currency_send_id'] = currency_send.id
+        if currency_received is not None:
+            kwargs['currency_received_id'] = currency_received.id
+        return [
+            cls(
+                dico['idTransaction'],
+                send=(dico['currencySend'], dico['amountSend']),
+                received=(dico['currencyReceived'], dico['amountReceived']),
+                date=dico['date']
+            )
+            for dico in database.get_transactions_filter(portofolio_id, **kwargs)
+        ]
 
     @classmethod
     def new_transaction(cls,
