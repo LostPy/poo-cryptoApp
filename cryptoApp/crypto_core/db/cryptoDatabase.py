@@ -238,7 +238,10 @@ class CryptoDatabase:
 
         return self.get_transactions(where=where, where_args=where_args)
 
-    def insert_currencies(self, currencies: Union[dict, list[dict]], commit: bool = True) -> int:
+    def insert_currencies(self,
+                          currencies: Union[dict, list[dict]],
+                          ignore: bool = False,
+                          commit: bool = True) -> int:
 
         sql_instruction = insert(
             "Currency",
@@ -251,7 +254,8 @@ class CryptoDatabase:
                 'circulatingSupply',
                 'rank',
                 'isCrypto'
-            ]
+            ],
+            ignore=ignore
         )
 
         cursor = self.connection.cursor()

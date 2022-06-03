@@ -1,6 +1,6 @@
 CREATE TABLE Portofolio (
 	idPortofolio integer PRIMARY KEY,
-	name varchar(20) NOT NULL,
+	name varchar(20) NOT NULL UNIQUE,
 	password varchar(255) NOT NULL
 );
 

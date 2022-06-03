@@ -6,88 +6,88 @@
 from PySide6 import QtCore
 
 qt_resource_data = b"\
-\x00\x00\x04\xf3\
+\x00\x00\x04\xfa\
 C\
 REATE TABLE Port\
 ofolio (\x0a\x09idPort\
 ofolio integer P\
 RIMARY KEY,\x0a\x09nam\
 e varchar(20) NO\
-T NULL,\x0a\x09passwor\
-d varchar(255) N\
-OT NULL\x0a);\x0a\x0aCREA\
-TE TABLE Currenc\
-y (\x0a\x09idCurrency \
-varchar(10) PRIM\
-ARY KEY,\x0a\x09name v\
-archar(10) NOT N\
-ULL,\x0a\x09ticker var\
-char(3) NOT NULL\
-,\x0a\x09price real,\x0a\x09\
-logo text,\x0a\x09circ\
-ulatingSupply in\
-teger,\x0a\x09rank int\
-eger,\x0a\x09isCrypto \
-boolean NOT NULL\
- CHECK (isCrypto\
- IN (0, 1))\x0a);\x0a\x0a\
-CREATE TABLE Por\
-tofoliosCurrenci\
-es (\x0a\x09portofolio\
- integer NOT NUL\
-L,\x0a\x09currency var\
+T NULL UNIQUE,\x0a\x09\
+password varchar\
+(255) NOT NULL\x0a)\
+;\x0a\x0aCREATE TABLE \
+Currency (\x0a\x09idCu\
+rrency varchar(1\
+0) PRIMARY KEY,\x0a\
+\x09name varchar(10\
+) NOT NULL,\x0a\x09tic\
+ker varchar(3) N\
+OT NULL,\x0a\x09price \
+real,\x0a\x09logo text\
+,\x0a\x09circulatingSu\
+pply integer,\x0a\x09r\
+ank integer,\x0a\x09is\
+Crypto boolean N\
+OT NULL CHECK (i\
+sCrypto IN (0, 1\
+))\x0a);\x0a\x0aCREATE TA\
+BLE PortofoliosC\
+urrencies (\x0a\x09por\
+tofolio integer \
+NOT NULL,\x0a\x09curre\
+ncy varchar(10) \
+NOT NULL,\x0a\x09amoun\
+t real DEFAULT 0\
+,\x0a\x09PRIMARY KEY(p\
+ortofolio, curre\
+ncy),\x0a\x09FOREIGN K\
+EY (portofolio) \
+REFERENCES Porto\
+folio(idPortofol\
+io),\x0a\x09FOREIGN KE\
+Y (currency) REF\
+ERENCES Currency\
+(idCurrency)\x0a);\x0a\
+\x0aCREATE TABLE Cr\
+yptoTransaction \
+(\x0a\x09idTransaction\
+ integer PRIMARY\
+ KEY,\x0a\x09date time\
+stamp,\x0a\x09amountSe\
+nd real,\x0a\x09amount\
+Received real,\x0a\x09\
+currencySend var\
 char(10) NOT NUL\
-L,\x0a\x09amount real \
-DEFAULT 0,\x0a\x09PRIM\
-ARY KEY(portofol\
-io, currency),\x0a\x09\
-FOREIGN KEY (por\
-tofolio) REFEREN\
-CES Portofolio(i\
-dPortofolio),\x0a\x09F\
-OREIGN KEY (curr\
-ency) REFERENCES\
+L,\x0a\x09currencyRece\
+ived varchar(10)\
+ NOT NULL,\x0a\x09port\
+ofolio integer N\
+OT NULL,\x0a\x09FOREIG\
+N KEY (currencyS\
+end) REFERENCES \
+Currency(idCurre\
+ncy),\x0a\x09FOREIGN K\
+EY (currencyRece\
+ived) REFERENCES\
  Currency(idCurr\
-ency)\x0a);\x0a\x0aCREATE\
- TABLE CryptoTra\
-nsaction (\x0a\x09idTr\
-ansaction intege\
-r PRIMARY KEY,\x0a\x09\
-date timestamp,\x0a\
-\x09amountSend real\
-,\x0a\x09amountReceive\
-d real,\x0a\x09currenc\
-ySend varchar(10\
-) NOT NULL,\x0a\x09cur\
-rencyReceived va\
-rchar(10) NOT NU\
-LL,\x0a\x09portofolio \
-integer NOT NULL\
-,\x0a\x09FOREIGN KEY (\
-currencySend) RE\
-FERENCES Currenc\
-y(idCurrency),\x0a\x09\
-FOREIGN KEY (cur\
-rencyReceived) R\
-EFERENCES Curren\
-cy(idCurrency),\x0a\
-\x09FOREIGN KEY (po\
-rtofolio) REFERE\
-NCES Portofolio(\
-idPortofolio)\x0a);\
-\x0a\x0a\x0aINSERT INTO C\
-urrency (idCurre\
-ncy, name, ticke\
-r, isCrypto)\x0aVAL\
-UES ('dollar', '\
-Dollar', 'USD', \
-0);\x0a\x0aINSERT INTO\
- Currency (idCur\
-rency, name, tic\
-ker, isCrypto)\x0aV\
-ALUES ('euro', '\
-Euro', 'EUR', 0)\
-;\x0a\
+ency),\x0a\x09FOREIGN \
+KEY (portofolio)\
+ REFERENCES Port\
+ofolio(idPortofo\
+lio)\x0a);\x0a\x0a\x0aINSERT\
+ INTO Currency (\
+idCurrency, name\
+, ticker, isCryp\
+to)\x0aVALUES ('dol\
+lar', 'Dollar', \
+'USD', 0);\x0a\x0aINSE\
+RT INTO Currency\
+ (idCurrency, na\
+me, ticker, isCr\
+ypto)\x0aVALUES ('e\
+uro', 'Euro', 'E\
+UR', 0);\x0a\
 "
 
 qt_resource_name = b"\
@@ -107,7 +107,7 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00\x02\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x0c\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-\x00\x00\x01\x81\x0f\xb2&\x82\
+\x00\x00\x01\x81*\xb0\x22b\
 "
 
 def qInitResources():

@@ -159,7 +159,7 @@ class Cryptocurrency(Currency):
         ]
 
         if database is not None:
-            cls.add_currencies_to_db(currencies, database)
+            cls.add_currencies_to_db(currencies, database, ignore=True)
 
         return currencies
 
@@ -173,10 +173,12 @@ class Cryptocurrency(Currency):
             return cls.from_db_dict(result)
 
     @classmethod
-    def add_currencies_to_db(cls, currencies: list, database: CryptoDatabase):
+    def add_currencies_to_db(cls, currencies: list, database: CryptoDatabase,
+                             ignore: bool = False):
         """Add existing currencies to the database.\
         Use for currencies created from API."""
-        database.insert_currencies([currency.to_dict() for currency in currencies])
+        database.insert_currencies(
+            [currency.to_dict() for currency in currencies], ignore=ignore)
 
     @classmethod
     def init_cryptocurrencies(cls, database: CryptoDatabase, rank_max: int = 10):
