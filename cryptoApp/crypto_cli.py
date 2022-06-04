@@ -1,12 +1,14 @@
 """An alternative to the GUI
 """
 from logging import ERROR
+from datetime import datetime
 import click
 import pandas as pd
 import matplotlib.pyplot as plt
+from tabulate import tabulate
 
 from crypto_core.db import CryptoDatabase
-from crypto_core.objects import Portofolio, Currency, Cryptocurrency
+from crypto_core.objects import Portofolio, Currency, Cryptocurrency, Transaction
 from crypto_core import crypto_api, errors
 from utils.hashstring import hash_string
 
@@ -33,6 +35,7 @@ if len(Currency.CURRENCIES) == 0:
     Currency.init_currencies(database)
 if len(Cryptocurrency.CRYPTOCURRENCIES) == 0:
     Cryptocurrency.init_cryptocurrencies(database)
+
 portfolios = Portofolio.get_all_portofolios(database)
 names_portfolio = [portfolio.name for portfolio in portfolios]
 print(Currency.CURRENCIES)
@@ -136,14 +139,13 @@ def login(portfolio, password):
         click.echo("""Select an action:
         1- Add a transaction
         2- Display transactions
-        3- Remove a transaction
-        4- Display currencies
-        5- Display currencies pie chart
-        6- Quit
+        3- Display currencies
+        4- Display currencies pie chart
+        5- Quit
         """)
-        choice = int(click.prompt("Your choice", type=click.Choice([str(i) for i in range(1, 7)])))
+        choice = int(click.prompt("Your choice", type=click.Choice([str(i) for i in range(1, 6)])))
 
-        if choice == 1:
+        if choice == 1:  # Add a transaction
             # User input
             # ----------
             currency_id_send = click.prompt(
@@ -161,10 +163,10 @@ def login(portfolio, password):
 
             # Parse data
             # ----------
-            #try:
-            currency_send = parse_currency_id(currency_id_send)
-            currency_received = parse_currency_id(currency_id_received)
-            """except:  # Add exception for API connection error
+            try:
+                currency_send = parse_currency_id(currency_id_send)
+                currency_received = parse_currency_id(currency_id_received)
+            except:  # Add exception for API connection error
                 click.echo(click.style(
                                "This currency doesn't exist in database and "
                                "connection to the API failed: check your connection.",
@@ -172,7 +174,7 @@ def login(portfolio, password):
                            err=True)
                 click.pause("Press a key to continue...")
                 click.clear()  # clear the screen
-                continue  # skip the next instruction and go to next iteration"""
+                continue  # skip the next instruction and go to next iteration
 
             if currency_send is not None and currency_received is not None:
                 click.echo("The following transaction will be added:")
@@ -209,19 +211,43 @@ def login(portfolio, password):
 
             click.pause("Press a key to continue...")
 
-        elif choice == 2:
+        elif choice == 2:  # Display transactions
+            start = click.prompt(
+                "The date of the oldest transaction to be displayed",
+                type=click.DateTime(), default=datetime(2010, 1, 1))
+            end = click.prompt(
+                "The date of the most recent transaction to be displayed",
+                type=click.DateTime(), default=datetime(2100, 1, 1))
+            transactions = [
+                (
+                    transaction.id,
+                    transaction.date,
+                    transaction.currency_send,
+                    transaction.amount_send,
+                    transaction.currency_received,
+                    transaction.amount_received
+                )
+                for transaction in portfolio.get_transactions(database, start, end)
+            ]
+            headers = (
+                'Id',
+                'Datetime',
+                'Currency spend',
+                'Amount spend',
+                'Currency bought',
+                'Amount bought'
+            )
+            print(tabulate(transactions, headers, tablefmt='rst'))
             click.pause("Press a key to continue...")
 
-        elif choice == 3:
-            click.pause("Press a key to continue...")
-
-        elif choice == 4 and len(portfolio.currencies) > 0:
+        elif choice == 3 and len(portfolio.currencies) > 0:  # Display currencies
             for currency, amount in sorted(portfolio.currencies.items(),
                                            key=lambda item: item[1]):
                 print(f"{currency.name}: {amount}{currency.ticker.upper()}")
             click.pause("Press a key to continue...")
 
-        elif choice == 5 and len(portfolio.cryptocurrencies) > 0:
+        # Display cryptocurrencies in pie chart
+        elif choice == 4 and len(portfolio.cryptocurrencies) > 0:
             labels = list()
             values = list()
             for currency, amount in portfolio.cryptocurrencies.items():
@@ -235,13 +261,16 @@ def login(portfolio, password):
             plt.legend()
             plt.show()
 
-        elif choice in (4, 5):
+        # Display currencies but there is not registered currencies
+        elif choice in (3, 4):
             click.echo("You don't have registered currencies.")
             click.pause("Press a key to continue...")
 
-        elif choice == 6:
+        # Quit
+        elif choice == 5:
             quit = True
         click.clear()  # clear the screen
+
     portfolio.upload_currencies_in_db(database)
     database.close()
 

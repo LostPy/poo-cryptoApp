@@ -18,7 +18,7 @@ class Transaction:
         self.currency_send = send[0]
         self.amount_send = send[1]
         self.currency_received = received[0]
-        self.currency_received = received[1]
+        self.amount_received = received[1]
         self.date = date
 
     def __compare(self, other, operator) -> bool:
