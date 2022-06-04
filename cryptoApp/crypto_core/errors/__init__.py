@@ -19,3 +19,14 @@ from .db import (
     DatabaseAlreadyExists,
     DbRequestMissingData
 )
+
+from .objects import (
+    ObjectException,
+    CurrencyError,
+    PortfolioError,
+    TransactionError,
+    CurrencyNotFound,
+    CurrencyDbNotFound,
+    CurrencyApiNotFound,
+    PortfolioAlreadyExists,
+)

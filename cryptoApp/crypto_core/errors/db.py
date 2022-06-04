@@ -7,7 +7,7 @@ class DatabaseException(CryptoException):
     pass
 
 
-class DatabaseAlreadyExists(CryptoException):
+class DatabaseAlreadyExists(DatabaseException):
     """Exception raised during the initialization \
     when the database file already exists.
     """

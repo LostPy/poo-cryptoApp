@@ -16,8 +16,8 @@ def get_coin_by_id(name: str, vs_currency: str):
         'name': result['name'],
         'ticker': result['symbol'],
         'image': result['image']['large'],
-        'market_cap_rank': result['market_cap_rank'],
-        'current_price': result['market_data']['current_price'][vs_currency.lower()],
+        'rank': result['market_cap_rank'],
+        'price': result['market_data']['current_price'][vs_currency.lower()],
         'circulating_supply': result['market_data']['circulating_supply']
     }
 
@@ -25,16 +25,19 @@ def get_coin_by_id(name: str, vs_currency: str):
 def get_top_coins_market(money: str, max_rank: int = 10) -> list[dict]:
     if not isinstance(max_rank, int) and not (1 <= max_rank <= 100):
         raise ValueError(f"max_rank must be an integer between 1 and 100, not '{max_rank}'")
-    result = cg.get_coins_market(vs_currencies=money.lower(), per_page=max_rank)
-    return {
-        'id': result['id'],
-        'name': result['name'],
-        'ticker': result['symbol'],
-        'image': result['image'],
-        'market_cap_rank': result['market_cap_rank'],
-        'current_price': result['current_price'],
-        'circulating_supply': result['circulating_supply']
-    }
+    result = cg.get_coins_markets(vs_currency=money.lower(), per_page=max_rank)
+    return [
+        {
+            'id': currency['id'],
+            'name': currency['name'],
+            'ticker': currency['symbol'],
+            'image': currency['image'],
+            'rank': currency['market_cap_rank'],
+            'price': currency['current_price'],
+            'circulating_supply': currency['circulating_supply']
+        }
+        for currency in result
+    ]
 
 
 def get_price(name, money):

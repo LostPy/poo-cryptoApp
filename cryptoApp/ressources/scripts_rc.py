@@ -81,13 +81,13 @@ O Currency (idCu\
 rrency, name, ti\
 cker, isCrypto)\x0a\
 VALUES ('dollar'\
-, 'Dollar', 'USD\
+, 'Dollar', 'usd\
 ', 0);\x0a\x0aINSERT I\
 NTO Currency (id\
 Currency, name, \
 ticker, isCrypto\
 )\x0aVALUES ('euro'\
-, 'Euro', 'EUR',\
+, 'Euro', 'eur',\
  0);\x0a\
 "
 
@@ -108,7 +108,7 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00\x02\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x0c\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-\x00\x00\x01\x81-\xa2\xb1\x9b\
+\x00\x00\x01\x81/\xf5\x87\xb6\
 "
 
 def qInitResources():

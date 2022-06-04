@@ -39,7 +39,7 @@ CREATE TABLE CryptoTransaction (
 
 
 INSERT INTO Currency (idCurrency, name, ticker, isCrypto)
-VALUES ('dollar', 'Dollar', 'USD', 0);
+VALUES ('dollar', 'Dollar', 'usd', 0);
 
 INSERT INTO Currency (idCurrency, name, ticker, isCrypto)
-VALUES ('euro', 'Euro', 'EUR', 0);
+VALUES ('euro', 'Euro', 'eur', 0);

@@ -24,6 +24,16 @@ class Portofolio(NameableObject):
             raise ValueError("password must be a str")
         self._password = password
 
+    @property
+    def cryptocurrencies(self):
+        """Returns `self.currencies` without currencies which are not crypto.
+        """
+        return {
+            c: amount
+            for c, amount in self.currencies.items()
+            if isinstance(c, Cryptocurrency)
+        }
+
     def __getitem__(self, currency: Cryptocurrency) -> float:
         if not isinstance(currency, Cryptocurrency):
             raise ValueError("The key must be an instance of Cryptocurrency")
@@ -65,17 +75,24 @@ class Portofolio(NameableObject):
         # just a shortcup to don't have lines too long and for lisibility
         # (Reference copy)
         CRYPTOS = Cryptocurrency.CRYPTOCURRENCIES
-        self.currencies = {
-            Cryptocurrency.from_db_dict(result)
-            if result['idCurrency'] not in CRYPTOS.keys()
-            else CRYPTOS[result['idCurrency']]: result['amount']
-            for result in database.get_currencies_portofolios(self.id)
-        }
+        for result in database.get_currencies_portofolios(self.id):
+            id_ = result['idCurrency']
+            if result['isCrypto'] and id_ not in CRYPTOS.keys():
+                self.currencies[Cryptocurrency.from_db_dict(result)] = result['amount']
+            elif not result['isCrypto']:
+                self.currencies[Currency.CURRENCIES[id_]] = result['amount']
+            else:
+                self.currencies[CRYPTOS[id_]] = result['amount']
 
     def upload_currencies_in_db(self, database: CryptoDatabase):
-        for currency, amount in self.currencies:
-            database.update_currency_portofolio(
-                self.id, currency.id, amount, commit=False)
+        for currency, amount in self.currencies.items():
+            try:
+                database.insert_currency_portofolio(
+                    self.id, currency.id, amount, commit=False)
+            except Exception as e:
+                print(e)
+                database.update_currency_portofolio(
+                    self.id, currency.id, amount, commit=False)
         database.commit()
 
     def add_transaction(self, /,
@@ -86,6 +103,16 @@ class Portofolio(NameableObject):
         if date is None:
             date = datetime.now()
         Transaction.new_transaction(send, received, date, self.id, database)
+
+        if send[0] in self.currencies.keys():
+            self.currencies[send[0]] -= send[1]
+        else:
+            self.currencies[send[0]] = -send[1]
+
+        if received[0] in self.currencies.keys():
+            self.currencies[received[0]] -= received[1]
+        else:
+            self.currencies[received[0]] = received[1]
 
     def update(self, database: CryptoDatabase):
         """Update this portfolio in database with current name and password atrtibutes.
