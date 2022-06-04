@@ -7,6 +7,7 @@ import __main__  # to get the path of __main__ (Python file executed)
 from PySide6.QtCore import QFile, QIODevice
 
 from ressources import scripts_rc
+from utils import new_logger
 
 from .. import errors
 from .sql_instructions import (
@@ -27,6 +28,8 @@ def _dict_factory(cursor, row):
 class CryptoDatabase:
     """Class to work with the 'crypto.db' sqlite database.
     """
+
+    LOGGER = new_logger("DATABASE")
 
     # The database is in the "root" of project
     PATH: Path = Path(__main__.__file__).parent / 'crypto.db'
@@ -54,8 +57,8 @@ class CryptoDatabase:
                 "name",
                 "ticker",
                 "price",
-                "logo",
                 "circulatingSupply",
+                "last_update",
                 "rank",
                 "isCrypto"
             ]
@@ -97,8 +100,8 @@ class CryptoDatabase:
                                    portofolio_id: int) -> list[dict]:
         cursor = self.connection.cursor()
         cursor.execute("""
-            SELECT idCurrency, name, ticker, price,
-                   logo, circulatingSupply, rank, isCrypto, amount
+            SELECT idCurrency, name, ticker, price, circulatingSupply,
+            last_update, rank, isCrypto, amount
             FROM PortofoliosCurrencies
             INNER JOIN Currency ON PortofoliosCurrencies.currency = Currency.idCurrency
             WHERE portofolio=?
@@ -238,7 +241,10 @@ class CryptoDatabase:
 
         return self.get_transactions(where=where, where_args=where_args)
 
-    def insert_currencies(self, currencies: Union[dict, list[dict]], commit: bool = True) -> int:
+    def insert_currencies(self,
+                          currencies: Union[dict, list[dict]],
+                          ignore: bool = False,
+                          commit: bool = True) -> int:
 
         sql_instruction = insert(
             "Currency",
@@ -247,41 +253,48 @@ class CryptoDatabase:
                 'name',
                 'ticker',
                 'price',
-                'logo',
                 'circulatingSupply',
+                'last_update',
                 'rank',
                 'isCrypto'
-            ]
+            ],
+            ignore=ignore
         )
 
-        cursor = self.connection.cursor()
-
         if isinstance(currencies, dict):
-            values = (
-                currencies['id'],
-                currencies['name'],
-                currencies.get('ticker'),
-                currencies.get('price'),
-                currencies.get('logo'),
-                currencies.get('circulating_supply'),
-                currencies.get('rank'),
-                currencies.get('is_crypto')
-            )
+            try:
+                values = (
+                    currencies['id'],
+                    currencies['name'],
+                    currencies.get('ticker'),
+                    currencies.get('price'),
+                    currencies.get('circulating_supply'),
+                    currencies.get('last_update'),
+                    currencies.get('rank'),
+                    currencies.get('is_crypto')
+                )
+            except KeyError as e:
+                raise errors.DbRequestMissingData(e.args[0])
+            cursor = self.connection.cursor()
             cursor.execute(sql_instruction, values)
 
         elif isinstance(currencies, list) and isinstance(currencies[0], dict):
-            values = [(
-                currency['id'],
-                currency['name'],
-                currency.get('ticker'),
-                currency.get('price'),
-                currency.get('logo'),
-                currency.get('circulating_supply'),
-                currency.get('rank'),
-                currency.get('is_crypto')
-            )
-                for currency in currencies
-            ]
+            try:
+                values = [(
+                    currency['id'],
+                    currency['name'],
+                    currency.get('ticker'),
+                    currency.get('price'),
+                    currency.get('circulating_supply'),
+                    currency.get('last_update'),
+                    currency.get('rank'),
+                    currency.get('is_crypto')
+                )
+                    for currency in currencies
+                ]
+            except KeyError as e:
+                raise errors.DbRequestMissingData(e.args[0])
+            cursor = self.connection.cursor()
             cursor.executemany(sql_instruction, values)
 
         else:
@@ -302,10 +315,13 @@ class CryptoDatabase:
             ]
         )
 
-        values = (
-            portofolio['name'],
-            portofolio['password']
-        )
+        try:
+            values = (
+                portofolio['name'],
+                portofolio['password']
+            )
+        except KeyError as e:
+            raise errors.DbRequestMissingData(e.args[0])
 
         cursor = self.connection.cursor()
         cursor.execute(sql_instruction, values)
@@ -344,14 +360,17 @@ class CryptoDatabase:
             ]
         )
 
-        values = (
-            transaction['date'],
-            transaction['amount_send'],
-            transaction['amount_received'],
-            transaction['currency_send_id'],
-            transaction['currency_received_id'],
-            transaction['portofolio_id']
-        )
+        try:
+            values = (
+                transaction['date'],
+                transaction['amount_send'],
+                transaction['amount_received'],
+                transaction['currency_send_id'],
+                transaction['currency_received_id'],
+                transaction['portofolio_id']
+            )
+        except KeyError as e:
+            raise errors.DbRequestMissingData(e.args[0])
 
         cursor = self.connection.cursor()
         cursor.execute(sql_instruction, values)
@@ -363,16 +382,20 @@ class CryptoDatabase:
         return id_
 
     def update_currency(self, currency: dict, commit: bool = True):
-        columns = ['price', 'logo', 'circulatingSupply', 'rank']
+        columns = ['price', 'circulatingSupply', 'last_update', 'rank']
         values = list()
         nb_col_delete = 0
-        for i, attr_name in enumerate(['price', 'logo', 'circulating_supply', 'rank']):
+        for i, attr_name in enumerate(['price', 'circulating_supply', 'last_update', 'rank']):
             if currency.get(attr_name) is None:
                 columns.pop(i - nb_col_delete)
                 nb_col_delete += 1
             else:
                 values.append(currency[attr_name])
-        values.append(currency['id'])  # for WHERE statement
+
+        try:
+            values.append(currency['id'])  # for WHERE statement
+        except KeyError:
+            raise errors.DbRequestMissingData("id")
 
         cursor = self.connection.cursor()
         cursor.execute(
@@ -393,11 +416,14 @@ class CryptoDatabase:
             where="WHERE idPortofolio=?"
         )
 
-        values = (
-            portofolio['name'],
-            portofolio['password'],
-            portofolio['id']
-        )
+        try:
+            values = (
+                portofolio['name'],
+                portofolio['password'],
+                portofolio['id']
+            )
+        except KeyError as e:
+            raise errors.DbRequestMissingData(e.args[0])
 
         cursor = self.connection.cursor()
         cursor.execute(sql_instruction, values)
@@ -434,14 +460,17 @@ class CryptoDatabase:
             where="WHERE idTransaction=?"
         )
 
-        values = (
-            transaction['date'],
-            transaction['amount_send'],
-            transaction['amount_received'],
-            transaction['currency_send_id'],
-            transaction['currency_received_id'],
-            transaction['id']
-        )
+        try:
+            values = (
+                transaction['date'],
+                transaction['amount_send'],
+                transaction['amount_received'],
+                transaction['currency_send_id'],
+                transaction['currency_received_id'],
+                transaction['id']
+            )
+        except KeyError as e:
+            raise errors.DbRequestMissingData(e.args[0])
 
         cursor = self.connection.cursor()
         cursor.execute(sql_instruction, values)
@@ -486,16 +515,23 @@ class CryptoDatabase:
     def commit(self):
         """Commit change"""
         self.connection.commit()
+        self.LOGGER.debug('all changed are commited')
 
     def open(self):
         """Close the current connection if it's opened and create a new connection."""
         self.close()
-        self.connection = sqlite3.connect(self.PATH.resolve())
+        if not self.PATH.exists():
+            raise errors.ConnectionDatabaseError(self.PATH)
+        self.connection = sqlite3.connect(self.PATH.resolve(),
+                                          detect_types=sqlite3.PARSE_DECLTYPES)
         self.connection.row_factory = _dict_factory
+        self.LOGGER.debug('connection opened')
 
     def close(self):
         """Close the connection to the database."""
-        self.connection.close()
+        if self.connection:
+            self.connection.close()
+        self.LOGGER.debug('connection closed')
 
     @classmethod
     def init_database(cls, remove_existing: bool = False):
@@ -514,21 +550,29 @@ class CryptoDatabase:
         elif cls.PATH.exists():
             cls.remove()
 
-        conn = sqlite3.connect(cls.PATH)
-        cursor = conn.cursor()
+        try:
+            conn = sqlite3.connect(cls.PATH, detect_types=sqlite3.PARSE_DECLTYPES)
 
-        script_file = QFile(":/sql/init_db")
-        script_file.open(QIODevice.ReadOnly | QIODevice.Text)
-        cursor.executescript(str(script_file.readAll(), 'utf-8'))
-        script_file.close()
+            cursor = conn.cursor()
 
-        conn.commit()
-        conn.close()
+            script_file = QFile(":/sql/init_db")
+            script_file.open(QIODevice.ReadOnly | QIODevice.Text)
+            cursor.executescript(str(script_file.readAll(), 'utf-8'))
+            script_file.close()
+
+            conn.commit()
+        except sqlite3.OperationalError as e:
+            cls.LOGGER.error(f"Error during the database initialization: {e}")
+            raise errors.DatabaseError(f"Error during the database initialization: {e}")
+        finally:
+            if conn:
+                conn.close()
 
     @classmethod
     def remove(cls):
         """Remove the sqlite database file."""
         cls.PATH.unlink(missing_ok=True)
+        cls.LOGGER.warning(f"Database {cls.PATH} was deleted")
 
     @classmethod
     def create_connection(cls):
@@ -539,6 +583,9 @@ class CryptoDatabase:
         name : str
             The connection name
         """
-        conn = sqlite3.connect(cls.PATH.resolve())
+        if not cls.PATH.exists():
+            raise errors.ConnectionDatabaseError(cls.PATH)
+        conn = sqlite3.connect(cls.PATH.resolve(), detect_types=sqlite3.PARSE_DECLTYPES)
         conn.row_factory = _dict_factory
+        cls.LOGGER.debug("Connection to the database created")
         return cls(conn)

@@ -1,6 +1,6 @@
 CREATE TABLE Portofolio (
 	idPortofolio integer PRIMARY KEY,
-	name varchar(20) NOT NULL,
+	name varchar(20) NOT NULL UNIQUE,
 	password varchar(255) NOT NULL
 );
 
@@ -9,9 +9,9 @@ CREATE TABLE Currency (
 	name varchar(10) NOT NULL,
 	ticker varchar(3) NOT NULL,
 	price real,
-	logo text,
 	circulatingSupply integer,
 	rank integer,
+	last_update timestamp,
 	isCrypto boolean NOT NULL CHECK (isCrypto IN (0, 1))
 );
 
