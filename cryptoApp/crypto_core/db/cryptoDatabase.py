@@ -54,8 +54,8 @@ class CryptoDatabase:
                 "name",
                 "ticker",
                 "price",
-                "logo",
                 "circulatingSupply",
+                "last_update",
                 "rank",
                 "isCrypto"
             ]
@@ -97,8 +97,8 @@ class CryptoDatabase:
                                    portofolio_id: int) -> list[dict]:
         cursor = self.connection.cursor()
         cursor.execute("""
-            SELECT idCurrency, name, ticker, price,
-                   logo, circulatingSupply, rank, isCrypto, amount
+            SELECT idCurrency, name, ticker, price, circulatingSupply,
+            last_update, rank, isCrypto, amount
             FROM PortofoliosCurrencies
             INNER JOIN Currency ON PortofoliosCurrencies.currency = Currency.idCurrency
             WHERE portofolio=?
@@ -250,8 +250,8 @@ class CryptoDatabase:
                 'name',
                 'ticker',
                 'price',
-                'logo',
                 'circulatingSupply',
+                'last_update',
                 'rank',
                 'isCrypto'
             ],
@@ -266,8 +266,8 @@ class CryptoDatabase:
                 currencies['name'],
                 currencies.get('ticker'),
                 currencies.get('price'),
-                currencies.get('logo'),
                 currencies.get('circulating_supply'),
+                currencies.get('last_update'),
                 currencies.get('rank'),
                 currencies.get('is_crypto')
             )
@@ -279,8 +279,8 @@ class CryptoDatabase:
                 currency['name'],
                 currency.get('ticker'),
                 currency.get('price'),
-                currency.get('logo'),
                 currency.get('circulating_supply'),
+                currency.get('last_update'),
                 currency.get('rank'),
                 currency.get('is_crypto')
             )
@@ -367,10 +367,10 @@ class CryptoDatabase:
         return id_
 
     def update_currency(self, currency: dict, commit: bool = True):
-        columns = ['price', 'logo', 'circulatingSupply', 'rank']
+        columns = ['price', 'circulatingSupply', 'last_update', 'rank']
         values = list()
         nb_col_delete = 0
-        for i, attr_name in enumerate(['price', 'logo', 'circulating_supply', 'rank']):
+        for i, attr_name in enumerate(['price', 'circulating_supply', 'last_update', 'rank']):
             if currency.get(attr_name) is None:
                 columns.pop(i - nb_col_delete)
                 nb_col_delete += 1
@@ -494,7 +494,8 @@ class CryptoDatabase:
     def open(self):
         """Close the current connection if it's opened and create a new connection."""
         self.close()
-        self.connection = sqlite3.connect(self.PATH.resolve())
+        self.connection = sqlite3.connect(self.PATH.resolve(),
+                                          detect_types=sqlite3.PARSE_DECLTYPES)
         self.connection.row_factory = _dict_factory
 
     def close(self):
@@ -518,7 +519,7 @@ class CryptoDatabase:
         elif cls.PATH.exists():
             cls.remove()
 
-        conn = sqlite3.connect(cls.PATH)
+        conn = sqlite3.connect(cls.PATH, detect_types=sqlite3.PARSE_DECLTYPES)
         cursor = conn.cursor()
 
         script_file = QFile(":/sql/init_db")
@@ -543,6 +544,6 @@ class CryptoDatabase:
         name : str
             The connection name
         """
-        conn = sqlite3.connect(cls.PATH.resolve())
+        conn = sqlite3.connect(cls.PATH.resolve(), detect_types=sqlite3.PARSE_DECLTYPES)
         conn.row_factory = _dict_factory
         return cls(conn)
