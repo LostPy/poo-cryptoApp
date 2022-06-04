@@ -49,7 +49,6 @@
         <file alias="line-chart-white.svg">icons/chart/line-chart-white.svg</file>
         <file alias="pie-chart-black.svg">icons/chart/pie-chart-black.svg</file>
         <file alias="pie-chart-white.svg">icons/chart/pie-chart-white.svg</file>
-        <file alias="pie-chart-box-white.svg">icons/chart/pie-chart-box-white.svg</file>
     </qresource>
 
 </RCC>

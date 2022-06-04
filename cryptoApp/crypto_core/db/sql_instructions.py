@@ -28,6 +28,10 @@ INSERT = """INSERT INTO {table} ({columns})
 VALUES ({values})
 """
 
+INSERT_OR_IGNORE = """INSERT OR IGNORE INTO {table} ({columns})
+VALUES ({values})
+"""
+
 # Template for `UPDATE` instruction
 UPDATE = """UPDATE {table}
 SET {values}
@@ -109,8 +113,9 @@ def create_table(name: str, columns: list[str]) -> str:
     return CREATE_TABLE.format(name=name, columns=list_to_str(columns))
 
 
-def insert(table: str, columns: list[str], values: list = None) -> str:
-    """Returns SQL instructions for an `UPDATE`
+def insert(table: str, columns: list[str],
+           values: list = None, ignore: bool = False) -> str:
+    """Returns SQL instructions for an `INSERT`
 
     Parameters
     ----------
@@ -118,6 +123,10 @@ def insert(table: str, columns: list[str], values: list = None) -> str:
         The table's name
     columns : list[str]
         The list of columns in order of values
+    values : list, optional
+        values to insert (corresponding to the columns)
+    ignore : bool, optional, default: False
+        If True use the instruction `INSERT OR IGNORE`
 
     Returns
     -------
@@ -129,6 +138,12 @@ def insert(table: str, columns: list[str], values: list = None) -> str:
     else:
         values = ('?, ' * len(columns)).removesuffix(', ')
 
+    if ignore:
+        return INSERT_OR_IGNORE.format(
+            table=table,
+            columns=list_to_str(columns),
+            values=values
+        )
     return INSERT.format(
         table=table,
         columns=list_to_str(columns),

@@ -1,8 +1,10 @@
+
 import os.path
 import sys
 sys.path.append(os.path.abspath("../poo-crypto-common/cryptoApp"))
 print(sys.path)
 
+from datetime import datetime
 from crypto_core.db import CryptoDatabase
 
 from datetime import datetime
@@ -20,6 +22,7 @@ CURRENCIES = [
         'price': 26935,
         'logo': None,
         'circulating_supply': 120954445,
+        'last_update': datetime.now(),
         'rank': 1,
         'is_crypto': True
     },
@@ -31,6 +34,7 @@ CURRENCIES = [
         'price': 1644.18,
         'logo': "/path/logo",
         'circulating_supply': 53557474665,
+        'last_update': datetime.now(),
         'rank': 2,
         'is_crypto': True
     }
@@ -106,14 +110,14 @@ print(currency_portofolio)
 # Update
 # ----------
 
-currency_update = {'id': 'bitcoin', 'logo': "/path/logo/bitcoin"}
+currency_update = {'id': 'bitcoin', 'last_update': datetime(2022, 6, 1)}
 db.update_currency(currency_update)
 currency_by_id = db.get_currency_by_id("bitcoin")
 
-if currency_by_id['logo'] == currency_update['logo']:
+if currency_by_id['last_update'] == currency_update['last_update']:
     print('currency update: Ok')
 else:
-    print('currency update: Error\n', currency_by_id)
+    print('currency update: Error\n', currency_by_id['last_update'], '!=', currency_update['last_update'])
 
 portofolio_update = {'id': 1, 'name': 'test', 'password': 'password456'}
 db.update_portofolio(portofolio_update)
