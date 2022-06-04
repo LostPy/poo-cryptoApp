@@ -16,5 +16,6 @@ class CryptoException(Exception):
 from .db import (
     DatabaseException,
     ConnectionDatabaseError,
-    DatabaseAlreadyExists
+    DatabaseAlreadyExists,
+    DbRequestMissingData
 )

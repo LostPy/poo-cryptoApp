@@ -23,4 +23,13 @@ class ConnectionDatabaseError(DatabaseException):
 
     def __init__(self, name: str):
         """name must be the database name."""
-        super().__init__(f"Can't connect to this database: '{name}'")
+        super().__init__(f"Can't connect to this database: '{name}'."
+                         " Check if the database was initialized.")
+
+
+class DbRequestMissingData(DatabaseException):
+    """Exception raised when missing data in a request to the db (update or insert).
+    """
+
+    def __init__(self, data: str):
+        super().__init__(f"Missing data to complete the request: '{data}'")
