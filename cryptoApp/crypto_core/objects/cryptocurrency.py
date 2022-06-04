@@ -7,13 +7,14 @@ import requests
 
 from .. import crypto_api
 from ..db import CryptoDatabase
+from .. import errors
 from . import Currency
 
 
 class Cryptocurrency(Currency):
     """All the informations concerning the crypto we want to look at"""
 
-    CRYPTOCRYPTOCURRENCIES = dict()  # A dictionary with currencies already loaded
+    CRYPTOCURRENCIES = dict()  # A dictionary with currencies already loaded
     LOGO_DIR_PATH = Path(__main__.__file__).resolve().parent / 'logos'
     LOGO_FILENAME_FORMAT = "{id}.png"
 
@@ -22,12 +23,16 @@ class Cryptocurrency(Currency):
                  circulating_supply: int = None,
                  last_update: datetime = None,
                  rank: int = None):
-        super(Cryptocurrency, self).__init__(name, id_)
-        self.ticker = ticker
+        super().__init__(id_, name, ticker)
         self.price = price
         self.circulating_supply = circulating_supply
         self.rank = rank
         self.last_update = last_update
+
+    @property
+    def gecko_id(self) -> str:
+        """Redefine gecko_id property, it's the same id than database."""
+        return self.id
 
     @property
     def logo(self):
@@ -110,7 +115,7 @@ class Cryptocurrency(Currency):
         return currency
 
     @classmethod
-    def from_api_dict(cls, d: dict):
+    def from_api_dict(cls, d: dict, add_to_cryptos_dict: bool = True):
         logo_path = cls.logo_path(d['id'])
         if not logo_path.exists():
             # if logo_path doesn't exists, this function download the image
@@ -120,18 +125,21 @@ class Cryptocurrency(Currency):
             with open(logo_path, 'wb') as f:
                 shutil.copyfileobj(r.raw, f)
 
-        return cls(
+        currency = cls(
             d['id'],
             name=d['name'],
-            ticker=d['symbol'],
-            price=d['current_price'],
+            ticker=d['ticker'],
+            price=d['price'],
             circulating_supply=int(d['circulating_supply']),
             last_update=datetime.now(),
-            rank=d['market_cap_rank']
+            rank=d['rank']
         )
+        if add_to_cryptos_dict:
+            cls.CRYPTOCURRENCIES[currency.id] = currency
+        return currency
 
     @classmethod
-    def from_api(cls, id_: str, database: CryptoDatabase = None):
+    def from_api(cls, id_: str, vs_currency: str, database: CryptoDatabase = None):
         """Get a new cryptocurrency from API.
         If database is not None, this cryptocurrency is saved in database.
         """
@@ -139,9 +147,11 @@ class Cryptocurrency(Currency):
             cls.CRYPTOCURRENCIES[id_].update()
             return cls.CRYPTOCURRENCIES[id_]
 
-        currency = cls.from_api_dict(crypto_api.get_coin_by_id(id_))
+        currency = cls.from_api_dict(crypto_api.get_coin_by_id(id_, vs_currency))
+        print(currency)
         if database is not None:
             cls.add_currencies_to_db([currency], database)
+        print(currency)
         return currency
 
     @classmethod
@@ -158,8 +168,8 @@ class Cryptocurrency(Currency):
             cls.from_api_dict(currency_data)
             if currency_data['id'] not in CURRENCIES
             else CURRENCIES[currency_data['id']]._update_from_api_dict(currency_data)
-            for currency_data in crypto_api.get_top_cryptocurrencies(
-                vs_currency.id, max_rank)
+            for currency_data in crypto_api.get_top_coins_market(
+                vs_currency.gecko_id, max_rank)
         ]
 
         if database is not None:
@@ -171,10 +181,11 @@ class Cryptocurrency(Currency):
     def from_db(cls, id_: str, database: CryptoDatabase):
         if id_ in cls.CRYPTOCURRENCIES.keys():
             return cls.CRYPTOCURRENCIES[id_]
-
         result = database.get_currency_by_id(id_.lower())
+        print(result)
         if result is not None:
             return cls.from_db_dict(result)
+        raise errors.CurrencyDbNotFound(id_)
 
     @classmethod
     def add_currencies_to_db(cls, currencies: list, database: CryptoDatabase,
@@ -190,7 +201,7 @@ class Cryptocurrency(Currency):
         """
         cls.CRYPTOCURRENCIES = {
             d['idCurrency']: cls.from_db_dict(d, add_to_cryptos_dict=False)
-            for d in database.get_top_cryptocurrencies()
+            for d in database.get_top_cryptocurrencies(rank_max)
         }
 
     @classmethod
@@ -212,4 +223,4 @@ class Cryptocurrency(Currency):
     @classmethod
     def logo_path(cls, id_: str):
         """Returns the logo path for currency id given."""
-        return cls.LOGO_DIR_PATH / cls.LOGO_FILENAME_FORMAT.format(id_)
+        return cls.LOGO_DIR_PATH / cls.LOGO_FILENAME_FORMAT.format(id=id_)

@@ -7,7 +7,9 @@ Une application pour enregistrer ses transactions de cryptomonaies et visualiser
 
  * Python3.9+
  * PySide6 (GUI)
+ * click (CLI)
  * pandas
+ * tabulate (display dataframe in cli)
  * matplotlib (for CLI)
  * pycoingecko
  * colorama (for colored logs)
