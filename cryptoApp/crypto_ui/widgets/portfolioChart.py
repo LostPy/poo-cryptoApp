@@ -6,15 +6,10 @@ from crypto_core.objects import Portofolio
 
 class PortfolioChart(QChartView):
 
-    def __init__(self, portfolio: Portofolio, /,
-                 title: str = "",
-                 theme=QChart.ChartThemeLight,
-                 parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self.portfolio = portfolio
-        self.init_chart()
-        self.chart().setTitle(title)
-        self.chart().setTheme(theme)
+        self.portfolio = None
+      
 
     def init_chart(self):
         chart = QChart()
@@ -33,3 +28,11 @@ class PortfolioChart(QChartView):
         chart.legend().hide()
         self.setChart(chart)
         self.setRenderHint(QPainter.Antialiasing)  # to don't have pixelized curves
+
+    def set_portfolio(self, portfolio: Portofolio, /,
+                 title: str = "",
+                 theme=QChart.ChartThemeLight):
+        self.portfolio = portfolio
+        self.init_chart()
+        self.chart().setTitle(title)
+        self.chart().setTheme(theme)

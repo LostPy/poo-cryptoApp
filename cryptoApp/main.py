@@ -5,13 +5,16 @@ import sys
 from PySide6.QtWidgets import QApplication
 
 from utils import new_logger
+from crypto_ui import MainWindowCrypto
+
 
 
 main_logger = new_logger("MAIN")
 
 main_logger.info("Initialisation of the application...")
 app = QApplication(sys.argv)
-# here create the window
+w = MainWindowCrypto()
+w.show()
 result = app.exec()
 
 if result == 0:

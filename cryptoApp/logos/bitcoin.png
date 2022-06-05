@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Just a moment...</title>
+  <style>
+    html, body {width: 100%; height: 100%; margin: 0; padding: 0;}
+    body {background-color: #ffffff; color: #000000; font-family:-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Helvetica Neue",Arial, sans-serif; font-size: 16px; line-height: 1.7em;-webkit-font-smoothing: antialiased;}
+    h1 { text-align: center; font-weight:700; margin: 16px 0; font-size: 32px; color:#000000; line-height: 1.25;}
+    p {font-size: 20px; font-weight: 400; margin: 8px 0;}
+    p, .attribution, {text-align: center;}
+    #spinner {margin: 0 auto 30px auto; display: block;}
+    .attribution {margin-top: 32px;}
+    @keyframes fader     { 0% {opacity: 0.2;} 50% {opacity: 1.0;} 100% {opacity: 0.2;} }
+    @-webkit-keyframes fader { 0% {opacity: 0.2;} 50% {opacity: 1.0;} 100% {opacity: 0.2;} }
+    #cf-bubbles > .bubbles { animation: fader 1.6s infinite;}
+    #cf-bubbles > .bubbles:nth-child(2) { animation-delay: .2s;}
+    #cf-bubbles > .bubbles:nth-child(3) { animation-delay: .4s;}
+    .bubbles { background-color: #f58220; width:20px; height: 20px; margin:2px; border-radius:100%; display:inline-block; }
+    a { color: #2c7cb0; text-decoration: none; -moz-transition: color 0.15s ease; -o-transition: color 0.15s ease; -webkit-transition: color 0.15s ease; transition: color 0.15s ease; }
+    a:hover{color: #f4a15d}
+    .attribution{font-size: 16px; line-height: 1.5;}
+    .ray_id{display: block; margin-top: 8px;}
+    #cf-wrapper #challenge-form { padding-top:25px; padding-bottom:25px; }
+    #cf-hcaptcha-container { text-align:center;}
+    #cf-hcaptcha-container iframe { display: inline-block;}
+  </style>
+
+      <meta http-equiv="refresh" content="35">
+  <script>
+    //<![CDATA[
+    (function(){
+      window._cf_chl_opt={
+        cvId: "2",
+        cType: "non-interactive",
+        cNounce: "52845",
+        cRay: "716a67373f24999e",
+        cHash: "beb7a47da9053ad",
+        cUPMDTk: "\/coins\/images\/1\/large\/bitcoin.png?1547033579&__cf_chl_tk=J_oMP_n3ldoKqEHZa0ip_O7FYV9fyipKAaMpADsuBXY-1654447783-0-gaNycGzNB1E",
+        cFPWv: "g",
+        cTTimeMs: "1000",
+        cRq: {
+          ru: "aHR0cHM6Ly9hc3NldHMuY29pbmdlY2tvLmNvbS9jb2lucy9pbWFnZXMvMS9sYXJnZS9iaXRjb2luLnBuZz8xNTQ3MDMzNTc5",
+          ra: "cHl0aG9uLXJlcXVlc3RzLzIuMjcuMQ==",
+          rm: "R0VU",
+          d: "U+aTOUjU8sbaRppizlN8BzGeoV7QBBhsIW6+wEFnyk4zQ+2kVBnwOzR0R+iPxwJIGeHlbHyPi9036xIr+oSV11YLm5+9M8mu3ObD7HxuPV91DUSRJJPlkXyvl5ZB6XC/WUy/SBHc6paP4sw3YrwQd4Rh7pYMFmaxHHX+lEfC24V8gzbXgwPPTEhEsWPx8nmYsBLKfAIUx1VWYr5DCMtf5T3PQbGSoV1HYytGJEgQDlM8OmnuhH2Smjsr9Vd3ncIslbjecqBW0E+0HMxhPqapBwa+ayXvInqZ5t9xZmzASpWt89rVDoIvIeceCXIutEQPbIdnpN/KAcjLT5bjz6KLLqdGs8eDgCg+U97ri679FyCfD22SyWJ6vFJr4jTU9jdXuJMORmlkCHPOdAd5jl5cqLV/lNmeZq/HtotK+RKOi6flzjFx4rLvo0JunTdZoNOyaExutA9moj3V3mp+nSEga5ebD1PCYYiBSG/kiXxmiUQ1RDaOJnYPMKgq8RqAVgJqY/TaIrxp6LPh4vWumZzUDmZHvpVWPCIVhNo20aXgvP+7uWxqaXk5lDdTvTqtxrF+",
+          t: "MTY1NDQ0Nzc4My41NjgwMDA=",
+          m: "iLDyAp1Q6y3wybHwxTY2653yjczSCerIsgV9JVRRymg=",
+          i1: "hWemZWpVCV/bmoBTSx7tXQ==",
+          i2: "bDAPSPdzcVDyYykGGivXsg==",
+          zh: "/ya+pbMCRfmtjVDlrjgz7jm9h6TJnB1RR6OOOqDLgqo=",
+          uh: "JNy/u1JaDY8l68+s834y37Qd6UIzTJLBzCkJPX4t/ps=",
+          hh: "jHkrkDkRC61NBYv4cxSO9c8TEBPJfswI/tLyFvAKXjw=",
+        }
+      }
+      window._cf_chl_enter = function(){window._cf_chl_opt.p=1};
+    })();
+    //]]>
+  </script>
+  
+
+</head>
+<body>
+  <table width="100%" height="100%" cellpadding="20">
+    <tr>
+      <td align="center" valign="middle">
+          <div class="cf-browser-verification cf-im-under-attack">
+  <noscript>
+    <h1 data-translate="turn_on_js" style="color:#bd2426;">Please turn JavaScript on and reload the page.</h1>
+  </noscript>
+  <div id="cf-content" style="display:none">
+    
+    <div id="cf-bubbles">
+      <div class="bubbles"></div>
+      <div class="bubbles"></div>
+      <div class="bubbles"></div>
+    </div>
+    <h1><span data-translate="checking_browser">Checking your browser before accessing</span> assets.coingecko.com.</h1>
+    
+    <div id="no-cookie-warning" class="cookie-warning" data-translate="turn_on_cookies" style="display:none">
+      <p data-translate="turn_on_cookies" style="color:#bd2426;">Please enable Cookies and reload the page.</p>
+    </div>
+    <p data-translate="process_is_automatic">This process is automatic. Your browser will redirect to your requested content shortly.</p>
+    <p data-translate="allow_5_secs" id="cf-spinner-allow-5-secs" >Please allow up to 5 seconds&hellip;</p>
+    <p data-translate="redirecting" id="cf-spinner-redirecting" style="display:none">Redirecting&hellip;</p>
+  </div>
+   
+  <form class="challenge-form" id="challenge-form" action="/coins/images/1/large/bitcoin.png?1547033579&amp;__cf_chl_f_tk=J_oMP_n3ldoKqEHZa0ip_O7FYV9fyipKAaMpADsuBXY-1654447783-0-gaNycGzNB1E" method="POST" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" name="md" value=".zQ3C0A5z6r49d5G82djQPZeoeAF3DQk26az1WBTPQU-1654447783-0-AZ5aVqORAWYAME0GWkJZ6oSNlwdJ2K9wdXvtnuKJ2yZhHaMoRlyrQAaY5qOpo038HssOIoB4sajpqYScoKAzD4ahwvA_JG1cihAe2FHeg1xKQ_s4nc6Zze7lxhFLdIVJepKvpa51hviVRgTBj7JstYE361C5cqQGDsahquDKCvJB5ha8WsotHgU2H19ggkipZpu4Mm-P5pdrk0LKtmh_D5TiyF5M8fd8yadgYN2Mv1_aQzd2MVWWb-NeOn6lAFtl4gh2j7IZ3ixdDO6jsy85VifNegbjBSlH_6lIkqtZWEUaQq2fSqxwRc6-HM3WwiXh3MLQv6fmtguWayJkAMzoGToeE7lELm7hs5CsImCvKeQ8KFF0b0ogp2Lqy7jnVz147JIB_Vz9rkUKe0ArGdvjddq_GK2mrRIlDM17sv9Oi-EI5qQZSFbq3XxKHaD2VLMgk9pAj3u86Y5T_OBetvj0WWJfFqpZv8VhbyYuBXu8Vpfl4ElH0A5sywfb-Uvk5xJ7J3baIydvwPDQz7lPI4yTguWpd1WMA2GNX7mq52oQdWNm6tUMszs2lAacFZozO5DFegppKSJBUKpt2KNb2CHnb4PX1HXOHce4fKttH9pZ-pQ0D3yW6Jhd4vhl2Mi2TdohNGE6zfu_dYkKKWkA247QuVsriRdmYJGKeq5j1u_I6JkgWjpJPZxxZCAWJS4jwY_Eu15vF4eLYVgM_FeGPzJvuSrQDz7N_PcVFmgj8P7nNz-X" />
+    <input type="hidden" name="r" value=".fXL7X5xEQ.d_nMs1rrGlxvpMVqGASNcSFkUiZNf8wI-1654447783-0-AQX7nqa+VOahmWcmlPCceVIfuWB/GBGLIOHDZ7cKRCkgkNikEFJjJQAM2xGSAXjKAnKeRMal2QORqbQ4r9cF1JS7xKcOCT1lSQjGfOzLfNU9WJB1644fyOnAaLdHE4jTPby8ZVWjYxlOL2jz8BXa6jBogw2VKY3It1VUPQJSKEpgJzVesIw/TnPh5WYCPtrVEwgLr6iUyrGfIEDtfmO1XyQyk+11Pf6NijnBQ1Zyr2Avenl8cuswn6knNPpu7B2k48H0CtO/oAx8GJ6tYw9rwVQTmLtSPyDDNKnPkBnQJSmfk1u78iX3AluSzIQVyAbNmlOZ/0gxog7VpFL4ZZ3QhRGOtKq7ZC9a+mv23Vyn6t4/SPGKgyEPYazhZGhWT541Wtxa3PW6K3on/964EApnMMG6WTU0BENzMufH3xJhMbsP/wQkFZICGGQOjp75MVgCtUa2WNrYCQ/CcCIHtpfaZDHlhBjPCdGEDomMAMjSV9sAwANciVeWMAspc+5b+17msR9wof0XaHQWNEKXBtuSxSnBjxOeXRQ+3ep7Lt5h/LbpkX8WvnMToShY8xXrRdaS1CmLJR4qJDy6i5K4Itan3zp251+dCW5sv7BJBupeOhv0DqLSR6CDcbXreCaLeQFWGR42GVOebi+zl6JfSOtTPbyKFNHHvMStnbxltfE4i/OAomO3BK9Wj+NBhFKoLPk0cs0Vmysem4Wk4MnjRNUHkd04VkAgIKQc5+WpwWDYmrKqbBzS54/7xifqmkehXi50qIvKqz2rxAxad+e+jZlc7KaexzPxOH+z/yXDVgFvFaqH/ZQLBCdPS+gH3yH92pA068j0ly3lBRtXm0X9ei590XrBXqxzw30P1cPThsQLoOQSNrgdVJrxkyRrJpqJs38LjVwCKs6DK8m1SB6lRXu4hvFoSSZ/jz5LBzyF75lhlXrjkTPDhNbqBpmg56xbMEbIT81DSyLki0iVfQGyu5G1EPEeKXs5wGUHO9wqoO/ezKrjMmV2jcMgvMtEADNWbvjv3CRkERp/BWJ5vh4p0qvHCHSdshF40ce4om907zUMw97N2wysCW1wrnZepjb1htddGGJGYnDsiGrqCiGJi3xYLmqYGO7wiFTDpJR3UT7u+enM+XGLpz8V89JsRY0vjprQqLahZI7TBctoaP/LFUjpeJTwlV43yHbiLry40ayOjzdmHCJQz+fLENO9AsYA1Ap3RBrzL0zb/8I+h3OvvMLIPRlm9F9WzxSLRn7jBQQULOVpDVUuzZZzreRISFGxx17/xBE888hRfYj83OTqzN7P0hwXGdYVFHvZpjNmfzP3WnewXBa1+8jhIxu1wbS6Yt4w9uuKN7CszrKB5nFbRxBxPex1olooWwvIKLfgGgO1m2IuuzTfA3BGn8tGaXOhePUjLybTffmKfJNFqlaNfddGlvKIAtB9KuCJMZSmmtpsAGqXQp5F0JN8QTY06ls6a1MwPbdeGuVLUmNsj2UPoxDbkJWw50W0wYuE9YQWZgfdLXlrl6/HjI3BI6eWlMzLLYlKBQTF6cGSVJpPaswBTHQ7+V2+ISJ/vtH/CFP2CZtEa9Iytl9Pw+YvkDQ3/HLTuKBwYnbpDFsGG4c63PZpaYqwvvcL6aMj5GuTH+5lcemSrSCJFFN3Cl07KXOKKz7koqiqFxjmL8bUariwP0IVDmspve9x6Im+jz5ZNGYeQ2IWtPkfnnnxSkU7rRfioPT1TuoESjl7Mxpx0w4LLGvs/z+2QvLHoRBWYfPZlGId7c5Vh4oqGeICmJKgomO6rVzR1H6u4+VFBGiIGJYIXh/rjgsQnF4="/>
+    <input type="hidden" value="17b16441b4431079fc7ced640dabb2bf" id="jschl-vc" name="jschl_vc"/>
+    <!-- <input type="hidden" value="" id="jschl-vc" name="jschl_vc"/> -->
+    <input type="hidden" name="pass" value="1654447784.568-VF+W4ngnYj"/>
+    <input type="hidden" id="jschl-answer" name="jschl_answer"/>
+  </form>
+       <script>
+      //<![CDATA[
+      (function(){
+          var a = document.getElementById('cf-content');
+          a.style.display = 'block';
+          var isIE = /(MSIE|Trident\/|Edge\/)/i.test(window.navigator.userAgent);
+          var trkjs = isIE ? new Image() : document.createElement('img');
+          trkjs.setAttribute("src", "/cdn-cgi/images/trace/jschal/js/transparent.gif?ray=716a67373f24999e");
+          trkjs.id = "trk_jschal_js";
+          trkjs.setAttribute("alt", "");
+          document.body.appendChild(trkjs);
+          var cpo=document.createElement('script');
+          cpo.type='text/javascript';
+          cpo.src="/cdn-cgi/challenge-platform/h/g/orchestrate/jsch/v1?ray=716a67373f24999e";
+          
+          window._cf_chl_opt.cOgUHash = location.hash === '' && location.href.indexOf('#') !== -1 ? '#' : location.hash;
+          window._cf_chl_opt.cOgUQuery = location.search === '' && location.href.slice(0, -window._cf_chl_opt.cOgUHash.length).indexOf('?') !== -1 ? '?' : location.search;
+          if (window._cf_chl_opt.cUPMDTk && window.history && window.history.replaceState) {
+            var ogU = location.pathname + window._cf_chl_opt.cOgUQuery + window._cf_chl_opt.cOgUHash;
+            history.replaceState(null, null, "\/coins\/images\/1\/large\/bitcoin.png?1547033579&__cf_chl_rt_tk=J_oMP_n3ldoKqEHZa0ip_O7FYV9fyipKAaMpADsuBXY-1654447783-0-gaNycGzNB1E" + window._cf_chl_opt.cOgUHash);
+            cpo.onload = function() {
+              history.replaceState(null, null, ogU);
+            };
+          }
+          
+          document.getElementsByTagName('head')[0].appendChild(cpo);
+        }());
+      //]]>
+    </script>
+
+  
+  <div id="trk_jschal_nojs" style="background-image:url('/cdn-cgi/images/trace/jschal/nojs/transparent.gif?ray=716a67373f24999e')"> </div>
+</div>
+
+          
+          <div class="attribution">
+            DDoS protection by <a rel="noopener noreferrer" href="https://www.cloudflare.com/5xx-error-landing/" target="_blank">Cloudflare</a>
+            <br />
+            <span class="ray_id">Ray ID: <code>716a67373f24999e</code></span>
+          </div>
+      </td>
+     
+    </tr>
+  </table>
+</body>
+</html>
