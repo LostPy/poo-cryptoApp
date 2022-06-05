@@ -1,0 +1,1 @@
+from .ui_mainwindow_crypto import Ui_MainWindow

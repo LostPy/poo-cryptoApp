@@ -5,13 +5,19 @@ import sys
 from PySide6.QtWidgets import QApplication
 
 from utils import new_logger
-
+from crypto_core.db import CryptoDatabase
+from crypto_ui import MainWindowCrypto
 
 main_logger = new_logger("MAIN")
 
+if not CryptoDatabase.PATH.exists():
+    main_logger.warning("There is no DataBase, it's about to get created")
+    CryptoDatabase.init_database()
+
 main_logger.info("Initialisation of the application...")
 app = QApplication(sys.argv)
-# here create the window
+w = MainWindowCrypto()
+w.show()
 result = app.exec()
 
 if result == 0:
