@@ -114,22 +114,15 @@ class CryptoDatabase:
                          where_args: tuple = None,
                          fetchone: bool = False) -> Union[dict, list[dict]]:
         cursor = self.connection.cursor()
-        sql_instruction = select(
-            "CryptoTransaction",
-            columns=[
-                "idTransaction",
-                "date",
-                "amountSend",
-                "amountReceived",
-                "currencySend",
-                "currencyReceived",
-            ],
-            where=where
-        )
+        script_file = QFile(":/sql/script_select_transactions")
+        script_file.open(QIODevice.ReadOnly | QIODevice.Text)
+        sql_instruction = str(script_file.readAll(), 'utf-8').format(where=where)
+        script_file.close()
+
         if where_args is None:
             cursor.execute(sql_instruction)
         else:
-            cursor.execute(sql_instruction, where_args)
+            cursor.execute(sql_instruction, tuple(where_args))
 
         if fetchone:
             return cursor.fetchone()
@@ -230,14 +223,14 @@ class CryptoDatabase:
         where_args = list()
         for k, v in filter_.items():
             if isinstance(v[1], list):
-                where += f"{k} {v[0]}"
+                where += f"{k} {v[0]}"  # cas du range_date
                 where_args += v[1]
             else:
                 where += f"{k} {v[0]} ? AND "
                 where_args.append(v[1])
 
         if where.endswith(" AND "):
-            where = where[:-5]  # remove last " AND "
+            where = where[:-5]  # Supprime le dernier " AND " 
 
         return self.get_transactions(where=where, where_args=where_args)
 

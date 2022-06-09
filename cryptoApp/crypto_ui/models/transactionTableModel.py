@@ -10,11 +10,11 @@ class TransactionTableModel(QAbstractTableModel):
         super().__init__()
         self.transactions = sorted(transactions)
         self.columns = (
-            "Name",
             "Currency send",
             "Amount send",
             "Currency received",
-            "Amount received")
+            "Amount received"
+        )
 
     def rowCount(self, parent) -> int:
         return len(self.transactions)
@@ -40,16 +40,14 @@ class TransactionTableModel(QAbstractTableModel):
 
         if role == Qt.DisplayRole:
             if index.column() == 0:
-                return transaction.name
+                return transaction.currency_send.name
 
             elif index.column() == 1:
-                return transaction.currency_send
-
-            elif index.column() == 2:
                 return transaction.amount_send
 
-            elif index.column() == 3:
-                return transaction.currency_received
+            elif index.column() == 2:
+                return transaction.currency_received.name
 
-            elif index.column() == 4:
+            elif index.column() == 3:
                 return transaction.amount_received
+

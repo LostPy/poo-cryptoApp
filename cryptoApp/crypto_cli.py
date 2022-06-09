@@ -222,9 +222,9 @@ def login(portfolio, password):
                 (
                     transaction.id,
                     transaction.date,
-                    transaction.currency_send,
+                    transaction.currency_send.name,
                     transaction.amount_send,
-                    transaction.currency_received,
+                    transaction.currency_received.name,
                     transaction.amount_received
                 )
                 for transaction in portfolio.get_transactions(database, start, end)
