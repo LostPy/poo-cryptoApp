@@ -27,6 +27,17 @@ def _dict_factory(cursor, row):
 
 class CryptoDatabase:
     """Class to work with the 'crypto.db' sqlite database.
+
+    Attibutes
+    ---------
+    connection : sqlite3.Connection
+        The sqlite connection
+
+    Class attributes
+    ----------------
+    LOGGER : logging.Logge
+        The logger for database interactions
+    PATH : The path of the database file
     """
 
     LOGGER = new_logger("DATABASE")
@@ -34,20 +45,36 @@ class CryptoDatabase:
     # The database is in the "root" of project
     PATH: Path = Path(__main__.__file__).parent / 'crypto.db'
 
-    # Currency to init
-    # TODO: Change this tuple in Currency object
-    BASE_CURRENCIES = [
-        ('dollar', "Dollar", "usd", 0),
-        ('euro', "Euro", "eur", 0)
-    ]
-
     def __init__(self, connection: sqlite3.Connection):
+        """Initialize the new instance.
+
+        Parameters
+        ----------
+        connection : sqlite3.Connection
+           The sqlite connection 
+        """
         self.connection: sqlite3.Connection = connection
 
     def get_currencies(self,
                        where: str = "",
                        where_args: tuple = None,
                        fetchone: bool = False) -> Union[dict, list[dict]]:
+        """Returns currencies data from database which match with the where statement.
+
+        Parameters
+        ----------
+        where : str
+           The where SQL instruction 
+        where_args : tuple, optional
+           Arguments to pass in the where statement (corresponding to '?')
+        fetchone : bool, optional
+           If True, returns only the first result 
+
+        Returns
+        -------
+        Union[dict, list[dict]] : The result, if fetchone is True, return a dict \
+                with currency data, else a list of dict with currencies data.
+        """
         cursor = self.connection.cursor()
         sql_instruction = select(
             "Currency",
@@ -77,6 +104,22 @@ class CryptoDatabase:
                         where: str = "",
                         where_args: tuple = None,
                         fetchone: bool = False) -> Union[dict, list[dict]]:
+        """Returns portfolios which match with where statement.
+
+        Parameters
+        ----------
+        where : str
+           The where SQL instruction 
+        where_args : tuple, optional
+           Arguments to pass in the where statement (corresponding to '?')
+        fetchone : bool, optional
+           If True, returns only the first result 
+
+        Returns
+        -------
+        Union[dict, list[dict]] : The result, if fetchone is True, return a dict \
+                with portfolio data, else a list of dict with portfolios data.
+        """
         cursor = self.connection.cursor()
         sql_instruction = select(
             "Portofolio",
@@ -98,6 +141,17 @@ class CryptoDatabase:
 
     def get_currencies_portofolios(self,
                                    portofolio_id: int) -> list[dict]:
+        """Returns currencies and corresponding amount to a portfolio.
+
+        Parameters
+        ----------
+        portofolio_id : int
+            The portfolio's id
+
+        Returns
+        -------
+        list[dict] : data of currencies with corresponding amount.
+        """
         cursor = self.connection.cursor()
         cursor.execute("""
             SELECT idCurrency, name, ticker, price, circulatingSupply,
@@ -113,6 +167,22 @@ class CryptoDatabase:
                          where: str = "",
                          where_args: tuple = None,
                          fetchone: bool = False) -> Union[dict, list[dict]]:
+        """Returns transactions which match with where statement.
+
+        Parameters
+        ----------
+        where : str
+           The where SQL instruction 
+        where_args : tuple, optional
+           Arguments to pass in the where statement (corresponding to '?')
+        fetchone : bool, optional
+           If True, returns only the first result 
+
+        Returns
+        -------
+        Union[dict, list[dict]] : The result, if fetchone is True, return a dict \
+                with transaction data, else a list of dict with transactions data.
+        """
         cursor = self.connection.cursor()
         script_file = QFile(":/sql/script_select_transactions")
         script_file.open(QIODevice.ReadOnly | QIODevice.Text)
@@ -129,6 +199,20 @@ class CryptoDatabase:
         return cursor.fetchall()
 
     def get_currency_by_id(self, id_: int, crypto: Union[bool, int] = 1) -> dict:
+        """Returns currency data from the id.
+
+        Parameters
+        ----------
+        id_ : int
+           Currency's id 
+        crypto : Union[bool, int]
+           If True, search only in cryptocurrencies else in non-cryptocurrencies. 
+
+        Returns
+        -------
+        dict : Currency data
+
+        """
         return self.get_currencies(
             where=where({
                 "idCurrency": ("=", id_),
@@ -137,6 +221,20 @@ class CryptoDatabase:
         )
 
     def get_currency_by_name(self, name: str, crypto: Union[bool, int] = 1) -> dict:
+        """Returns the currency which match with the name passed.
+
+        Parameters
+        ----------
+        name : str
+           The currency's name 
+        crypto : Union[bool, int]
+           If True, search only in cryptocurrencies else in non-cryptocurrencies. 
+
+        Returns
+        -------
+        dict : The currency data
+
+        """
         return self.get_currencies(
             where=where({
                 "name": ("=", name.capitalize()),
@@ -144,29 +242,51 @@ class CryptoDatabase:
             fetchone=True
         )
 
-    def get_currencies_contains_name(self,
-                                     name: str,
-                                     crypto: Union[bool, int] = 1) -> list[dict]:
-        return self.get_currencies(
-            where=where({
-                "name": ("LIKE", f"%{name.lower()}%"),
-                "isCrypto": ('=', int(crypto))
-            })
-        )
-
     def get_portofolio_by_id(self, id_: int) -> dict:
+        """Returns the portfolio which match with id.
+
+        Parameters
+        ----------
+        id_ : int
+           The portfolio's id 
+
+        Returns
+        -------
+        dict : The portfolio data
+
+        """
         return self.get_portofolios(
             where=where({"idPortofolio": ("=", id_)}), fetchone=True)
 
-    def get_portofolio_by_name(self, name: str) -> dict:
-        return self.get_portofolios(
-            where=where({"name": ('=', name)}), fetchone=True)
-
     def get_transaction_by_id(self, id_: int) -> dict:
+        """Returns the transaction from id.
+
+        Parameters
+        ----------
+        id_ : int
+           The transaction's id 
+
+        Returns
+        -------
+        dict : transaction data
+
+        """
         return self.get_transactions(
             where=where({"idTransaction": ('=', id_)}), fetchone=True)
 
     def get_top_cryptocurrencies(self, rank_max: int = 5) -> list[dict]:
+        """Returns the top of cryptocurrencies in database.
+
+        Parameters
+        ----------
+        rank_max : int
+            The max rank of cryptocurrencies to returns.
+
+        Returns
+        -------
+        list[dict] : The list of cryptocurrencies data
+
+        """
         return self.get_currencies(
             where=where({"rank": ('<=', rank_max), "isCrypto": ('=', 1)}))
 
@@ -176,6 +296,33 @@ class CryptoDatabase:
                                 range_amount_send: tuple[float, float] = None,
                                 range_amount_received: tuple[float, float] = None,
                                 range_date: tuple[datetime, datetime] = None) -> list[dict]:
+        """Returns transactions which match with parameters.
+
+        Parameters
+        ----------
+        portofolio_id : int
+           The portfolio's id 
+        currency_send_id : int, optional
+           The currency id of currency sent, default None (not constraint on this column) 
+        currency_receive_id : int, optional
+           The currency id of currency received, default None 
+        range_amount_send : tuple[float, float], optional
+           The range of amount sent, default None, can be a tuple with None \
+                   value to don't constraint a limit. \
+                   By example: `(None, 1000)` (no minimum and a maximum to 1000). 
+        range_amount_received : tuple[float, float], optional
+           The range amount received, default None, can be a tuple with None \
+                   value to don't constraint a limit. \
+                   By example: `(1000, None)` (minimum of 1000 and no maximum).
+        range_date : tuple[datetime, datetime], optional
+           The range date of transactions, can be a tuple with None value \
+                   to don't contraint a limite.\
+                   By example: `(datetime(2020, 01, 01), None)`.
+
+        Returns
+        -------
+        list[dict] : Data of transactions
+        """
         filter_ = dict(portofolio=("=", portofolio_id))
 
         if currency_send_id is not None:
@@ -237,7 +384,18 @@ class CryptoDatabase:
     def insert_currencies(self,
                           currencies: Union[dict, list[dict]],
                           ignore: bool = False,
-                          commit: bool = True) -> int:
+                          commit: bool = True):
+        """Insert currencies in database.
+
+        Parameters
+        ----------
+        currencies : Union[dict, list[dict]]
+            A list of dict with currencies's data or a dict with a currency's data
+        ignore : bool, optional
+           If True, ignore currencies already existing in database. Default: False. 
+        commit : bool, optional
+           If True, commit the insert instruction. 
+        """
 
         sql_instruction = insert(
             "Currency",
@@ -300,6 +458,15 @@ class CryptoDatabase:
             self.connection.commit()
 
     def insert_portofolio(self, portofolio: dict, commit: bool = True):
+        """Insert a portfolio in database.
+
+        Parameters
+        ----------
+        portofolio : dict
+            portofolio's data
+        commit : bool, optional
+           If True, commit the insert. 
+        """
         sql_instruction = insert(
             'Portofolio',
             [
@@ -330,6 +497,19 @@ class CryptoDatabase:
                                    currency_id: str,
                                    amount: float,
                                    commit: bool = True):
+        """Insert currency_portfolio in database.
+
+        Parameters
+        ----------
+        portofolio_id : int
+           The portfolio's id 
+        currency_id : str
+           The currency's id 
+        amount : float
+            amount of currency for this portfolop
+        commit : bool, optional
+           If True, commit insert 
+        """
         sql_instruction = insert(
             "PortofoliosCurrencies",
             ['portofolio', 'currency', 'amount'])
@@ -341,6 +521,15 @@ class CryptoDatabase:
             self.connection.commit()
 
     def insert_transaction(self, transaction: dict, commit: bool = True):
+        """Insert a transaction in database.
+
+        Parameters
+        ----------
+        transaction : dict
+           transaction's data 
+        commit : bool, optional
+           If True, commit insert 
+        """
         sql_instruction = insert(
             'CryptoTransaction',
             [
@@ -375,6 +564,15 @@ class CryptoDatabase:
         return id_
 
     def update_currency(self, currency: dict, commit: bool = True):
+        """Update a currency in database.
+
+        Parameters
+        ----------
+        currency : dict
+           Currency data (get with currency.to_dict) 
+        commit : bool, optional
+           If True, commit update
+        """
         columns = ['price', 'circulatingSupply', 'last_update', 'rank']
         values = list()
         nb_col_delete = 0
@@ -400,6 +598,15 @@ class CryptoDatabase:
             self.connection.commit()
 
     def update_portofolio(self, portofolio: dict, commit: bool = True):
+        """Update portfolio data.
+
+        Parameters
+        ----------
+        portofolio : dict
+           Portfolio data 
+        commit : bool, optional
+           If True, commit update
+        """
         sql_instruction = update(
             'Portofolio',
             [
@@ -429,6 +636,19 @@ class CryptoDatabase:
                                    currency_id: str,
                                    amount: float,
                                    commit: bool = True):
+        """Update currency_portfolio.
+
+        Parameters
+        ----------
+        portofolio_id : int
+           Portfolio's id
+        currency_id : str
+           Currency's id 
+        amount : float
+           The new amount 
+        commit : bool, optional
+           If True, commit update
+        """
         sql_instruction = update(
             "PortofoliosCurrencies",
             ['amount'],
@@ -441,6 +661,15 @@ class CryptoDatabase:
             self.connection.commit()
 
     def update_transaction(self, transaction: dict, commit: bool = True):
+        """Update transaction data.
+
+        Parameters
+        ----------
+        transaction : dict
+           The transaction data (get with transaction.to_dict) 
+        commit : bool, optional
+           If True, commit update
+        """
         sql_instruction = update(
             'CryptoTransaction',
             [
@@ -472,6 +701,15 @@ class CryptoDatabase:
             self.connection.commit()
 
     def delete_currencies(self, ids: list[str], commit: bool = True):
+        """Delete currencies from id.
+
+        Parameters
+        ----------
+        ids : list[str]
+            The list id of currencies to delete 
+        commit : bool, optional
+           If True, commit delete
+        """
         cursor = self.connection.cursor()
         values = [(id_, ) for id_ in ids]
         cursor.executemany(delete('Currency', "WHERE idCurrency=?"), values)
@@ -479,6 +717,15 @@ class CryptoDatabase:
             self.connection.commit()
 
     def delete_portofolio(self, id_: int, commit: bool = True):
+        """Delete the portfolio specified by the id.
+
+        Parameters
+        ----------
+        id_ : int
+           The portfolio id to delete. 
+        commit : bool
+           If True, commit delete 
+        """
         cursor = self.connection.cursor()
         cursor.execute(delete('Portofolio', "WHERE idPortofolio=?"), (id_, ))
         cursor.execute(delete('PortofoliosCurrencies', "WHERE portofolio=?"), (id_, ))
@@ -490,6 +737,17 @@ class CryptoDatabase:
                                    portofolio_id: int,
                                    currency_id: str,
                                    commit: bool = True):
+        """Delete a currency/portfolio association.
+
+        Parameters
+        ----------
+        portofolio_id : int
+           The portfolio's id 
+        currency_id : str
+           The currency's id 
+        commit : bool
+           If True, commit delete 
+        """
         sql_instruction = delete(
             'PortofoliosCurrencies', "WHERE portofolio=? AND currency=?")
         cursor = self.connection.cursor()
@@ -498,6 +756,15 @@ class CryptoDatabase:
             self.connection.commit()
 
     def delete_transactions(self, ids: list[int], commit: bool = True):
+        """Delete transactions specified by the list of id.
+
+        Parameters
+        ----------
+        ids : list[int]
+           The list of transaction id 
+        commit : bool
+           If True, commit delete 
+        """
         cursor = self.connection.cursor()
         values = [(id_, ) for id_ in ids]
         cursor.executemany(
@@ -506,12 +773,14 @@ class CryptoDatabase:
             self.connection.commit()
 
     def commit(self):
-        """Commit change"""
+        """Commit all changes.
+        """
         self.connection.commit()
         self.LOGGER.debug('all changed are commited')
 
     def open(self):
-        """Close the current connection if it's opened and create a new connection."""
+        """Close the current connection if it's opened and create a new connection.
+        """
         self.close()
         if not self.PATH.exists():
             raise errors.ConnectionDatabaseError(self.PATH)
@@ -570,11 +839,6 @@ class CryptoDatabase:
     @classmethod
     def create_connection(cls):
         """Create a new connection to the database.
-
-        Parameters
-        ----------
-        name : str
-            The connection name
         """
         if not cls.PATH.exists():
             raise errors.ConnectionDatabaseError(cls.PATH)
