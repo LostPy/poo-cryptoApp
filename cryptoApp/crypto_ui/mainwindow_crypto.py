@@ -12,6 +12,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.db = CryptoDatabase.create_connection()
         self.init_login_page()
         self.stackedWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.portfolio = None
 
     def init_login_page(self):
@@ -36,7 +37,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(2)
         print("New Portfolio Created !")
     
-    @Slot(int)
+    @Slot(int)  
     def on_stackedWidget_currentChanged(self, index):
         print("Curent Page", index)
     
