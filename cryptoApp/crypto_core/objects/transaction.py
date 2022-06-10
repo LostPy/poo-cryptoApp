@@ -18,12 +18,6 @@ class Transaction(CryptoAppObject):
         The currency received (bought) by the user.
     amount_received : float
         The amount received (bought) by the user
-
-    Methods
-    -------
-
-    Classmethods
-    ------------
     """
 
     def __init__(self,
@@ -103,17 +97,45 @@ class Transaction(CryptoAppObject):
         return self.__compare(o, op.le)
 
     def delete(self, database: CryptoDatabase, commit: bool = True):
-        """Delete the transaction from the database."""
+        """Delete the transaction from the database.
+
+        Parameters
+        ----------
+        database : CryptoDatabase
+            A database connection.
+        commit : bool, optiona
+            If True, commit changements, default: True.
+        """
         return database.delete_transactions([self.id], commit=commit)
 
     @staticmethod
     def multi_delete(transactions: list, database: CryptoDatabase, commit: bool = True):
-        """Delete a list of transactions from the database."""
+        """Delete a list of transactions from the database.
+
+        Parameters
+        ----------
+        transactions : list[Transaction]
+            Transactions to delete
+        database : CryptoDatabase
+            A database connection.
+        commit : bool, optiona
+            If True, commit changements, default: True.
+        """
         return database.delete_transactions([t.id for t in transactions], commit=commit)
 
     @staticmethod
     def __crypto_from_db(crypto_data: dict) -> Cryptocurrency:
-        """Returns the Cryptocurrency from database in a select transaction."""
+        """Returns the Cryptocurrency from database in a select transaction.
+        
+        Parameters
+        ----------
+        crypto_data : dict
+            Dictionary with currency data got from database.
+
+        Returns
+        -------
+        Cryptocurrency : The new cryptocurrency.
+        """
         if crypto_data[f'idCurrency'] in Cryptocurrency.CRYPTOCURRENCIES:
             return Cryptocurrency.CRYPTOCURRENCIES[crypto_data[f'idCurrency']]
 
@@ -129,7 +151,25 @@ class Transaction(CryptoAppObject):
                     currency_send: Currency = None,
                     currency_received: Currency = None,
                     **kwargs) -> list:
-        """Returns the list of transactions with conditions passed in parameters."""
+        """Returns the list of transactions with conditions passed in parameters.
+
+        Parameters
+        ----------
+        portofolio_id : int
+            The portfolio's id associated with transactions to get.
+        database : CryptoDatabase
+            The database connection.
+        currency_send : Currency, optional
+            If not None, transaction must have this currency as currency_send attribute.
+        currency_received : Currency, optional
+            If not None, transaction must have this currency as currency_received attribute.
+        **kwargs : other filter argument to pass in the parameters of \
+                CryptoDatabase.get_transactions_filter
+
+        Returns
+        -------
+        list[Transaction] : The list of transaction corresponding to filter.
+        """
 
         if currency_send is not None:
             kwargs['currency_send_id'] = currency_send.id
@@ -175,6 +215,26 @@ class Transaction(CryptoAppObject):
                         date: datetime,
                         portofolio_id: int,
                         database: CryptoDatabase):
+        """Create and returns a new instance of Transaction. \
+                This transaction is saved in database.
+
+        Parameters
+        ----------
+        send : tuple[Currency, float]
+           The currency send (spent) 
+        received : tuple[Currency, float]
+            The currency received (bought)
+        date : datetime
+            The date of the transaction
+        portofolio_id : int
+           The portfolio's id for this transaction. 
+        database : CryptoDatabase
+            The database connection
+        
+        Returns
+        -------
+        Transaction : The new instance of Transaction
+        """
         id_ = database.insert_transaction({
             'date': date,
             'amount_send': send[1],
@@ -192,6 +252,19 @@ class Transaction(CryptoAppObject):
 
     @classmethod
     def from_id(cls, id_: int, database: CryptoDatabase):
+        """Get and create a new instance from database with the id.
+
+        Parameters
+        ----------
+        id_ : int
+           The transaction's id 
+        database : CryptoDatabase
+            The database connection
+
+        Returns
+        -------
+        Transaction : The new instance of Transaction
+        """
         result = database.get_transaction_by_id(id_)
         if result is not None:
             return cls(
