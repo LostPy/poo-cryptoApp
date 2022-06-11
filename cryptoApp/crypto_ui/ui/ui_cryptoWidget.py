@@ -139,6 +139,7 @@ class Ui_CryptoWidget(object):
         self.spinBoxCirculatingSupply.setObjectName(u"spinBoxCirculatingSupply")
         self.spinBoxCirculatingSupply.setReadOnly(True)
         self.spinBoxCirculatingSupply.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.spinBoxCirculatingSupply.setMaximum(999999999)
 
         self.verticalLayout_2.addWidget(self.spinBoxCirculatingSupply)
 

@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QMainWindow, QMessageBox
 from PySide6.QtCore import Slot, Qt
 from crypto_core.objects import Portfolio, Currency, Cryptocurrency, Transaction
 from .models import TransactionTableModel
+from .widgets import CryptoWidget
 from crypto_core.db import CryptoDatabase
 from utils.hashstring import hash_string
 from datetime import datetime, timedelta
@@ -50,6 +51,13 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.send_amount = self.spinBoxSpend.value()
         self.receive_amount = self.spinBoxReceive.value()
 
+    def init_list_currencies(self):
+        self.widgets_currencies = [
+            CryptoWidget(currency, amount)
+            for currency, amount in self.portfolio.cryptocurrencies.items()
+        ]
+        self.listWidget_fav.addItems(self.widgets_currencies)
+
     @Slot(int)
     def on_comboBoxSend_currentIndexChanged(self, index: int):
         if index == 0:
@@ -73,9 +81,12 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         portfolio = self.portfolios[self.comboBoxPortfolio.currentIndex()]
         if portfolio.password == hash_string(self.lineEditPw.text()):
             self.portfolio = portfolio
-            self.portfolio_chart.set_portfolio(self.portfolio)
+            self.portfolio.load_currencies(self.db)
+            self.portfolio_chart.set_portfolio(self.portfolio,
+                                               title="Cryptomonaies possédées")
             self.init_tab_transaction()
             self.init_comboBox_currency()
+            self.init_list_currencies()
             self.stackedWidget.setCurrentIndex(0)
             print("Login Succesfull")
 

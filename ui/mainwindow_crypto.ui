@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="mainPage">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -62,7 +62,14 @@
              </layout>
             </item>
             <item>
-             <widget class="QListWidget" name="listWidget_fav"/>
+             <widget class="QListWidget" name="listWidget_fav">
+              <property name="movement">
+               <enum>QListView::Static</enum>
+              </property>
+              <property name="resizeMode">
+               <enum>QListView::Adjust</enum>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -276,9 +283,6 @@
                          <property name="prefix">
                           <string/>
                          </property>
-                         <property name="decimals">
-                          <number>4</number>
-                         </property>
                          <property name="minimum">
                           <double>0.000000000000000</double>
                          </property>
@@ -289,9 +293,6 @@
                        </item>
                        <item>
                         <widget class="QDoubleSpinBox" name="spinBoxReceive">
-                         <property name="decimals">
-                          <number>4</number>
-                         </property>
                          <property name="minimum">
                           <double>0.000000000000000</double>
                          </property>
@@ -406,7 +407,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>20</hour>
+                        <hour>21</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -422,9 +423,6 @@
                    <layout class="QVBoxLayout" name="verticalLayout_16">
                     <item>
                      <widget class="QDoubleSpinBox" name="spinBoxSpendFilter">
-                      <property name="decimals">
-                       <number>4</number>
-                      </property>
                       <property name="minimum">
                        <double>0.000000000000000</double>
                       </property>
@@ -435,9 +433,6 @@
                     </item>
                     <item>
                      <widget class="QDoubleSpinBox" name="spinBoxReceiveFilter">
-                      <property name="decimals">
-                       <number>4</number>
-                      </property>
                       <property name="minimum">
                        <double>0.000000000000000</double>
                       </property>
@@ -453,7 +448,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>20</hour>
+                        <hour>21</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>

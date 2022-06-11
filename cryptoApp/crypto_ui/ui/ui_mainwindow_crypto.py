@@ -18,10 +18,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateEdit,
     QDoubleSpinBox, QFrame, QGroupBox, QHBoxLayout,
-    QHeaderView, QLabel, QLineEdit, QListWidget,
-    QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
-    QSpacerItem, QSplitter, QStackedWidget, QTabWidget,
-    QTreeView, QVBoxLayout, QWidget)
+    QHeaderView, QLabel, QLineEdit, QListView,
+    QListWidget, QListWidgetItem, QMainWindow, QPushButton,
+    QSizePolicy, QSpacerItem, QSplitter, QStackedWidget,
+    QTabWidget, QTreeView, QVBoxLayout, QWidget)
 
 from ..widgets import PortfolioChart
 from ressources import icons_rc
@@ -67,6 +67,8 @@ class Ui_MainWindow(object):
 
         self.listWidget_fav = QListWidget(self.widget)
         self.listWidget_fav.setObjectName(u"listWidget_fav")
+        self.listWidget_fav.setMovement(QListView.Static)
+        self.listWidget_fav.setResizeMode(QListView.Adjust)
 
         self.verticalLayout_6.addWidget(self.listWidget_fav)
 
@@ -234,7 +236,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_10.setObjectName(u"verticalLayout_10")
         self.spinBoxSpend = QDoubleSpinBox(self.groupBoxTransactions)
         self.spinBoxSpend.setObjectName(u"spinBoxSpend")
-        self.spinBoxSpend.setDecimals(4)
         self.spinBoxSpend.setMinimum(0.000000000000000)
         self.spinBoxSpend.setMaximum(100000000.000000000000000)
 
@@ -242,7 +243,6 @@ class Ui_MainWindow(object):
 
         self.spinBoxReceive = QDoubleSpinBox(self.groupBoxTransactions)
         self.spinBoxReceive.setObjectName(u"spinBoxReceive")
-        self.spinBoxReceive.setDecimals(4)
         self.spinBoxReceive.setMinimum(0.000000000000000)
         self.spinBoxReceive.setMaximum(100000000.000000000000000)
 
@@ -315,7 +315,7 @@ class Ui_MainWindow(object):
 
         self.dateEditFromFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditFromFilter.setObjectName(u"dateEditFromFilter")
-        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(20, 0, 0)))
+        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(21, 0, 0)))
 
         self.verticalLayout_14.addWidget(self.dateEditFromFilter)
 
@@ -326,7 +326,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
         self.spinBoxSpendFilter = QDoubleSpinBox(self.groupBoxFilter)
         self.spinBoxSpendFilter.setObjectName(u"spinBoxSpendFilter")
-        self.spinBoxSpendFilter.setDecimals(4)
         self.spinBoxSpendFilter.setMinimum(0.000000000000000)
         self.spinBoxSpendFilter.setMaximum(100000000.000000000000000)
 
@@ -334,7 +333,6 @@ class Ui_MainWindow(object):
 
         self.spinBoxReceiveFilter = QDoubleSpinBox(self.groupBoxFilter)
         self.spinBoxReceiveFilter.setObjectName(u"spinBoxReceiveFilter")
-        self.spinBoxReceiveFilter.setDecimals(4)
         self.spinBoxReceiveFilter.setMinimum(0.000000000000000)
         self.spinBoxReceiveFilter.setMaximum(100000000.000000000000000)
 
@@ -342,7 +340,7 @@ class Ui_MainWindow(object):
 
         self.dateEditToFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditToFilter.setObjectName(u"dateEditToFilter")
-        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(20, 0, 0)))
+        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(21, 0, 0)))
 
         self.verticalLayout_16.addWidget(self.dateEditToFilter)
 
@@ -560,7 +558,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
 
 

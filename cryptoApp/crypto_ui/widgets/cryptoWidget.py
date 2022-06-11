@@ -21,8 +21,9 @@ class CryptoWidget(QWidget, Ui_CryptoWidget):
         self.labelRank.setText(
             f"#{self.currency.rank}" if self.currency.rank else '#Unknow')
         self.spinBoxAmount.setValue(self.amount)
-        self.spinBoxAmount.setSuffix(" " + self.ticker.upper())
+        self.spinBoxAmount.setSuffix(" " + self.currency.ticker.upper())
         self.spinBoxValue.setValue(self.currency.price)
         self.spinBoxValue.setSuffix(" €")
-        self.spinBoxCirculatingSupply.setValue(self.currency.circulating_supply)
+        self.spinBoxCirculatingSupply.setValue(self.currency.circulating_supply // 1e6)
+        self.spinBoxCirculatingSupply.setSuffix(" M")
         self.lineEditTicker.setText(self.currency.ticker)
