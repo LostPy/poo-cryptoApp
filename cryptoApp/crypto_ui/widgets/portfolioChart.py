@@ -1,7 +1,7 @@
 from PySide6.QtCharts import QChartView, QChart, QPieSeries, QPieSlice
 from PySide6.QtGui import QPainter
 
-from crypto_core.objects import Portofolio
+from crypto_core.objects import Portfolio
 
 
 class PortfolioChart(QChartView):
@@ -29,7 +29,7 @@ class PortfolioChart(QChartView):
         self.setChart(chart)
         self.setRenderHint(QPainter.Antialiasing)  # to don't have pixelized curves
 
-    def set_portfolio(self, portfolio: Portofolio, /,
+    def set_portfolio(self, portfolio: Portfolio, /,
                  title: str = "",
                  theme=QChart.ChartThemeLight):
         self.portfolio = portfolio

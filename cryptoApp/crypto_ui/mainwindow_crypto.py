@@ -1,7 +1,7 @@
 from .ui import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow
 from PySide6.QtCore import Slot
-from crypto_core.objects import Portofolio
+from crypto_core.objects import Portfolio
 from crypto_core.db import CryptoDatabase
 from utils.hashstring import hash_string
 
@@ -17,7 +17,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
 
     def init_login_page(self):
         self.comboBoxPortfolio.clear()
-        self.portfolios = Portofolio.get_all_portofolios(self.db)
+        self.portfolios = Portfolio.get_all_portfolios(self.db)
         self.comboBoxPortfolio.addItems([portfolio.name for portfolio in self.portfolios])
 
 
@@ -45,7 +45,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
     def on_buttonOkNp_clicked(self):
         name = self.lineEditNewName.text().strip()
         password = hash_string(self.lineEditNewName.text().strip())
-        Portofolio.new_portofolio(name, password, self.db)
+        Portfolio.new_portfolio(name, password, self.db)
         self.lineEditNewName.setText("")
         self.lineEditNewPw.setText("")
         self.stackedWidget.setCurrentIndex(1)

@@ -22,9 +22,9 @@ print(create_table(
         "amountReceived real",
         "currencySend integer NOT NULL",
         "currencyReceived integer NOT NULL",
-        "portofolio integer NOT NULL",
+        "portfolio integer NOT NULL",
         "FOREIGN KEY (currencySend) REFERENCES Currency(idCurrency)",
         "FOREIGN KEY (currencyReceived) REFERENCES Currency(idCurrency)",
-        "FOREIGN KEY (portofolio) REFERENCES Portofolio(idPortofolio)"
+        "FOREIGN KEY (portfolio) REFERENCES Portfolio(idPortfolio)"
     ]
 ))

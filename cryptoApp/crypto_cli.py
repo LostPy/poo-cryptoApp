@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 
 from crypto_core.db import CryptoDatabase
-from crypto_core.objects import Portofolio, Currency, Cryptocurrency, Transaction
+from crypto_core.objects import Portfolio, Currency, Cryptocurrency, Transaction
 from crypto_core import crypto_api, errors
 from utils.hashstring import hash_string
 
@@ -37,10 +37,8 @@ if len(Currency.CURRENCIES) == 0:
 if len(Cryptocurrency.CRYPTOCURRENCIES) == 0:
     Cryptocurrency.init_cryptocurrencies(database)
 
-portfolios = Portofolio.get_all_portofolios(database)
+portfolios = Portfolio.get_all_portfolios(database)
 names_portfolio = [portfolio.name for portfolio in portfolios]
-print(Currency.CURRENCIES)
-print(Cryptocurrency.CRYPTOCURRENCIES)
 
 ##################################
 ### Functions utils use in cli ###
@@ -102,7 +100,7 @@ def cli():
 def new_portfolio(name: str, password: str):
     """Create a new portfolio in the database.
     """
-    Portofolio.new_portofolio(name, hash_string(password), database)
+    Portfolio.new_portfolio(name, hash_string(password), database)
     click.echo(
         click.style("The portfolio ", fg='green')
         + click.style(name, bold=True)

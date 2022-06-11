@@ -147,7 +147,7 @@ class Transaction(CryptoAppObject):
 
 
     @classmethod
-    def from_filter(cls, portofolio_id: int, database: CryptoDatabase, /,
+    def from_filter(cls, portfolio_id: int, database: CryptoDatabase, /,
                     currency_send: Currency = None,
                     currency_received: Currency = None,
                     **kwargs) -> list:
@@ -155,7 +155,7 @@ class Transaction(CryptoAppObject):
 
         Parameters
         ----------
-        portofolio_id : int
+        portfolio_id : int
             The portfolio's id associated with transactions to get.
         database : CryptoDatabase
             The database connection.
@@ -205,7 +205,7 @@ class Transaction(CryptoAppObject):
                 ),
                 date=dico['date']
             )
-            for dico in database.get_transactions_filter(portofolio_id, **kwargs)
+            for dico in database.get_transactions_filter(portfolio_id, **kwargs)
         ]
 
     @classmethod
@@ -213,7 +213,7 @@ class Transaction(CryptoAppObject):
                         send: tuple[Currency, float],
                         received: tuple[Currency, float],
                         date: datetime,
-                        portofolio_id: int,
+                        portfolio_id: int,
                         database: CryptoDatabase):
         """Create and returns a new instance of Transaction. \
                 This transaction is saved in database.
@@ -226,7 +226,7 @@ class Transaction(CryptoAppObject):
             The currency received (bought)
         date : datetime
             The date of the transaction
-        portofolio_id : int
+        portfolio_id : int
            The portfolio's id for this transaction. 
         database : CryptoDatabase
             The database connection
@@ -241,7 +241,7 @@ class Transaction(CryptoAppObject):
             'amount_received': received[1],
             'currency_send_id': send[0].id,
             'currency_received_id': received[0].id,
-            'portofolio_id': portofolio_id
+            'portfolio_id': portfolio_id
         })
         return cls(
             id_,

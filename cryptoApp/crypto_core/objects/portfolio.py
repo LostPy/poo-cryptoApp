@@ -5,8 +5,8 @@ from . import NameableObject
 from ..db import CryptoDatabase
 
 
-class Portofolio(NameableObject):
-    """Define a portofolio of an user with the list of transactions.
+class Portfolio(NameableObject):
+    """Define a portfolio of an user with the list of transactions.
 
     Attributes
     ----------
@@ -123,7 +123,7 @@ class Portofolio(NameableObject):
         # Juste un raccourcies pour éviter d'avori des lignes trop longues.
         # (Reference copy)
         CRYPTOS = Cryptocurrency.CRYPTOCURRENCIES
-        for result in database.get_currencies_portofolios(self.id):
+        for result in database.get_currencies_portfolios(self.id):
             id_ = result['idCurrency']
             if result['isCrypto'] and id_ not in CRYPTOS.keys():
                 self.currencies[Cryptocurrency.from_db_dict(result)] = result['amount']
@@ -142,11 +142,11 @@ class Portofolio(NameableObject):
         """
         for currency, amount in self.currencies.items():
             try:
-                database.insert_currency_portofolio(
+                database.insert_currency_portfolio(
                     self.id, currency.id, amount, commit=False)
             except Exception as e:
                 print(e)
-                database.update_currency_portofolio(
+                database.update_currency_portfolio(
                     self.id, currency.id, amount, commit=False)
         database.commit()
 
@@ -190,7 +190,7 @@ class Portofolio(NameableObject):
         database : CryptoDatabase
             The database connection
         """
-        database.update_portofolio(self.to_dict())
+        database.update_portfolio(self.to_dict())
 
     def delete(self, database: CryptoDatabase):
         """Delete the portfolio from the database.
@@ -200,7 +200,7 @@ class Portofolio(NameableObject):
         database : CryptoDatabase
             The database connection
         """
-        database.delete_portofolio(self.id)
+        database.delete_portfolio(self.id)
 
     def to_dict(self) -> dict:
         """Returns portfolio data in a dictionary.
@@ -216,7 +216,7 @@ class Portofolio(NameableObject):
         }
 
     @classmethod
-    def new_portofolio(cls, name: str, password: str, database: CryptoDatabase):
+    def new_portfolio(cls, name: str, password: str, database: CryptoDatabase):
         """Create a new portfolio in database.
 
         Parameters
@@ -228,11 +228,11 @@ class Portofolio(NameableObject):
         database : CryptoDatabase
             The database connection
         """
-        id_ = database.insert_portofolio(dict(name=name, password=password))
+        id_ = database.insert_portfolio(dict(name=name, password=password))
         return cls(id_, name, password)
 
     @classmethod
-    def get_all_portofolios(cls, database: CryptoDatabase) -> list:
+    def get_all_portfolios(cls, database: CryptoDatabase) -> list:
         """Returns all portfolios from the database.
 
         Parameters
@@ -245,8 +245,8 @@ class Portofolio(NameableObject):
         list[Portfolio] : The list of portfolio
         """
         return [
-            cls(result['idPortofolio'], result['name'], result['password'])
-            for result in database.get_portofolios()
+            cls(result['idPortfolio'], result['name'], result['password'])
+            for result in database.get_portfolios()
         ]
 
     @classmethod
@@ -260,7 +260,7 @@ class Portofolio(NameableObject):
         database : CryptoDatabase
            The database connection 
         """
-        result = database.get_portofolio_by_id(id_)
+        result = database.get_portfolio_by_id(id_)
         if result is not None:
             return cls(id_, result['name'], result['password'])
 

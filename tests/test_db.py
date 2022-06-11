@@ -52,7 +52,7 @@ TRANSACTION = {
     'amount_received': 2,
     'currency_send_id': 'dollar',
     'currency_received_id': 'bitcoin',
-    'portofolio_id': None
+    'portfolio_id': None
 }
 
 CryptoDatabase.init_database(remove_existing=True)
@@ -68,10 +68,10 @@ db = CryptoDatabase.create_connection()
 # ----------
 
 db.insert_currencies(CURRENCIES, commit=False)
-portofolio_id = db.insert_portofolio(PORTOFOLIO)
-TRANSACTION['portofolio_id'] = portofolio_id
+portfolio_id = db.insert_portfolio(PORTOFOLIO)
+TRANSACTION['portfolio_id'] = portfolio_id
 db.insert_transaction(TRANSACTION)
-db.insert_currency_portofolio(portofolio_id, "bitcoin", 100)
+db.insert_currency_portfolio(portfolio_id, "bitcoin", 100)
 print("data inserted")
 
 # Select
@@ -84,10 +84,10 @@ print(currency_by_id)
 print(currency_by_name)
 print(currency_by_name2)
 
-portofolio_by_id = db.get_portofolio_by_id(1)
-portofolio_by_name = db.get_portofolio_by_name("test")
-print(portofolio_by_id)
-print(portofolio_by_name)
+portfolio_by_id = db.get_portfolio_by_id(1)
+portfolio_by_name = db.get_portfolio_by_name("test")
+print(portfolio_by_id)
+print(portfolio_by_name)
 
 transaction_by_id = db.get_transaction_by_id(1)
 transactions_filtered = db.get_transactions_filter(
@@ -103,8 +103,8 @@ print(transactions_filtered)
 print(transactions_filtered_2)
 
 
-currency_portofolio = db.get_currencies_portofolios(1)
-print(currency_portofolio)
+currency_portfolio = db.get_currencies_portfolios(1)
+print(currency_portfolio)
 
 
 # Update
@@ -119,34 +119,34 @@ if currency_by_id['last_update'] == currency_update['last_update']:
 else:
     print('currency update: Error\n', currency_by_id['last_update'], '!=', currency_update['last_update'])
 
-portofolio_update = {'id': 1, 'name': 'test', 'password': 'password456'}
-db.update_portofolio(portofolio_update)
-portofolio_by_id = db.get_portofolio_by_id(1)
-print(portofolio_by_id)
+portfolio_update = {'id': 1, 'name': 'test', 'password': 'password456'}
+db.update_portfolio(portfolio_update)
+portfolio_by_id = db.get_portfolio_by_id(1)
+print(portfolio_by_id)
 
 transaction_update = TRANSACTION | {'id': 1, 'currency_send_id': 'euro'}
-transaction_update.pop('portofolio_id')
+transaction_update.pop('portfolio_id')
 db.update_transaction(transaction_update)
 transaction_by_id = db.get_transaction_by_id(1)
 print(transaction_by_id)
 
-db.update_currency_portofolio(1, 'bitcoin', 20)
-print(db.get_currencies_portofolios(1))
+db.update_currency_portfolio(1, 'bitcoin', 20)
+print(db.get_currencies_portfolios(1))
 
 # Delete
 # ----------
 db.delete_currencies(['bitcoin'])
 db.delete_transactions([1])
-db.delete_currency_portofolio(1, 'bitcoin')
-db.delete_portofolio(1)
+db.delete_currency_portfolio(1, 'bitcoin')
+db.delete_portfolio(1)
 
 currency_by_id = db.get_currency_by_id("bitcoin")
 transaction_by_id = db.get_transaction_by_id(1)
-portofolio_by_id = db.get_portofolio_by_id(1)
+portfolio_by_id = db.get_portfolio_by_id(1)
 print(currency_by_id)
 print(transaction_by_id)
-print(portofolio_by_id)
-print(db.get_currencies_portofolios(1))
+print(portfolio_by_id)
+print(db.get_currencies_portfolios(1))
 
 # Remove database
 db.close()
