@@ -78,9 +78,8 @@ def parse_currency_id(currency_id) -> Currency:
         except errors.CurrencyDbNotFound:
             try:
                 return Cryptocurrency.from_api(
-                    currency_id, Currency.CURRENCIES['euro'].gecko_id, database=database)
-            except Exception as e:  # TODO: replace Exception by a custom specific API exception (ConnectionError and id inexisting)
-                print('api error: ', str(e))
+                    currency_id, Currency.CURRENCIES['euro'], database=database)
+            except errors.CurrencyApiNotFound as e:
                 return None
 
 
@@ -165,15 +164,13 @@ def login(portfolio, password):
             try:
                 currency_send = parse_currency_id(currency_id_send)
                 currency_received = parse_currency_id(currency_id_received)
-            except:  # Add exception for API connection error
-                click.echo(click.style(
-                               "This currency doesn't exist in database and "
-                               "connection to the API failed: check your connection.",
-                               fg='red'),
-                           err=True)
+            except errors.ApiConnectionError:
+                click.echo(click.style("Connection to the API failed: check your connection.",
+                                       fg='red'),
+                                       err=True)
                 click.pause("Press a key to continue...")
-                click.clear()  # clear the screen
-                continue  # skip the next instruction and go to next iteration
+                click.clear()  # clear l'écran
+                continue  # Passe les instructions suivantes et va à la prochaine itération
 
             if currency_send is not None and currency_received is not None:
                 click.echo("The following transaction will be added:")
@@ -250,8 +247,9 @@ def login(portfolio, password):
             labels = list()
             values = list()
             for currency, amount in portfolio.cryptocurrencies.items():
-                labels.append(f"{currency.name} ({currency.ticker.upper()})")
-                values.append(amount * currency.price)
+                if amount > 0:
+                    labels.append(f"{currency.name} ({currency.ticker.upper()})")
+                    values.append(amount * currency.price)
             plt.pie(values,
                     labels=labels,
                     autopct=lambda pct: custom_pct(pct, values),
