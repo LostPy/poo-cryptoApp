@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
-from PySide6.QtCore import QImage
+from PySide6.QtGui import QImage
 
 from crypto_core.objects import Currency
 from ..ui import Ui_CryptoWidget

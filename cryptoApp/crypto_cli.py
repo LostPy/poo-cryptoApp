@@ -18,6 +18,10 @@ from utils.hashstring import hash_string
 ######################
 CryptoDatabase.LOGGER.setLevel(ERROR)
 
+if not Cryptocurrency.LOGO_DIR_PATH.exists():
+    Cryptocurrency.LOGO_DIR_PATH.mkdir()
+
+    
 if not CryptoDatabase.PATH.exists():
     CryptoDatabase.init_database()
     database = CryptoDatabase.create_connection()
@@ -26,9 +30,6 @@ if not CryptoDatabase.PATH.exists():
     Cryptocurrency.get_top_coins_market(Currency.CURRENCIES['euro'], database=database)
     database.close()
     del database
-
-if not Cryptocurrency.LOGO_DIR_PATH.exists():
-    Cryptocurrency.LOGO_DIR_PATH.mkdir()
 
 database = CryptoDatabase.create_connection()
 if len(Currency.CURRENCIES) == 0:
