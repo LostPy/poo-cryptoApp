@@ -1,2 +1,2 @@
 from .portfolioChart import PortfolioChart
-#from .cryptoWidget import CryptoWidget
+from .cryptoWidget import CryptoWidget
