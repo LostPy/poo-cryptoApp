@@ -94,6 +94,7 @@ class Ui_CryptoWidget(object):
         self.spinBoxAmount.setReadOnly(True)
         self.spinBoxAmount.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.spinBoxAmount.setKeyboardTracking(True)
+        self.spinBoxAmount.setMaximum(999999999999.000000000000000)
 
         self.verticalLayout.addWidget(self.spinBoxAmount)
 
@@ -101,6 +102,7 @@ class Ui_CryptoWidget(object):
         self.spinBoxValue.setObjectName(u"spinBoxValue")
         self.spinBoxValue.setReadOnly(True)
         self.spinBoxValue.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.spinBoxValue.setMaximum(999999999.000000000000000)
 
         self.verticalLayout.addWidget(self.spinBoxValue)
 

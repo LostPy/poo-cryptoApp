@@ -1,5 +1,5 @@
 from .ui import Ui_MainWindow
-from PySide6.QtWidgets import QMainWindow, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QMessageBox, QListWidgetItem
 from PySide6.QtCore import Slot, Qt
 from crypto_core.objects import Portfolio, Currency, Cryptocurrency, Transaction
 from .models import TransactionTableModel
@@ -52,11 +52,12 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.receive_amount = self.spinBoxReceive.value()
 
     def init_list_currencies(self):
-        self.widgets_currencies = [
-            CryptoWidget(currency, amount)
-            for currency, amount in self.portfolio.cryptocurrencies.items()
-        ]
-        self.listWidget_fav.addItems(self.widgets_currencies)
+        for currency, amount in self.portfolio.cryptocurrencies.items():
+            item = QListWidgetItem(self.listWidget_fav)
+            crypto_widget = CryptoWidget(currency, amount, self.listWidget_fav)
+            item.setSizeHint(crypto_widget.sizeHint())
+            self.listWidget_fav.setItemWidget(item, crypto_widget)
+
 
     @Slot(int)
     def on_comboBoxSend_currentIndexChanged(self, index: int):
