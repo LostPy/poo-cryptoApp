@@ -3,6 +3,7 @@ import operator as op
 
 from . import CryptoAppObject, Currency, Cryptocurrency
 from ..db import CryptoDatabase
+from .. import errors
 
 
 class Transaction(CryptoAppObject):
@@ -266,33 +267,34 @@ class Transaction(CryptoAppObject):
         Transaction : The new instance of Transaction
         """
         result = database.get_transaction_by_id(id_)
-        if result is not None:
-            return cls(
-                result['idTransaction'],
-                send=(
-                    cls.__crypto_from_db({
-                        'idCurrency': result['idCurrencySend'],
-                        'name': result['nameSend'],
-                        'ticker': result['tickerSend'],
-                        'price': result['priceSend'],
-                        'circulatingSupply': result['circulatingSupplySend'],
-                        'last_update': result['lastUpdateSend'],
-                        'rank': result['rankSend']
-                    }),
-                    result['amountSend']
-                ),
-                received=(
-                    cls.__crypto_from_db({
-                        'idCurrency': result['idCurrencyReceived'],
-                        'name': result['nameReceived'],
-                        'ticker': result['tickerReceived'],
-                        'price': result['priceReceived'],
-                        'circulatingSupply': result['circulatingSupplyReceived'],
-                        'last_update': result['lastUpdateReceived'],
-                        'rank': result['rankReceived']
-                    }),
-                    result['amountReceived']
-                ),
-                date=result['date']
-            )
+        if result is None:
+            raise errors.TransactionNotFound(id_)
+        return cls(
+            result['idTransaction'],
+            send=(
+                cls.__crypto_from_db({
+                    'idCurrency': result['idCurrencySend'],
+                    'name': result['nameSend'],
+                    'ticker': result['tickerSend'],
+                    'price': result['priceSend'],
+                    'circulatingSupply': result['circulatingSupplySend'],
+                    'last_update': result['lastUpdateSend'],
+                    'rank': result['rankSend']
+                }),
+                result['amountSend']
+            ),
+            received=(
+                cls.__crypto_from_db({
+                    'idCurrency': result['idCurrencyReceived'],
+                    'name': result['nameReceived'],
+                    'ticker': result['tickerReceived'],
+                    'price': result['priceReceived'],
+                    'circulatingSupply': result['circulatingSupplyReceived'],
+                    'last_update': result['lastUpdateReceived'],
+                    'rank': result['rankReceived']
+                }),
+                result['amountReceived']
+            ),
+            date=result['date']
+        )
 

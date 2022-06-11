@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from . import Currency, Cryptocurrency, Transaction
-from . import NameableObject
+from . import NameableObject, Currency, Cryptocurrency, Transaction
 from ..db import CryptoDatabase
+from .. import errors
 
 
 class Portfolio(NameableObject):
@@ -261,6 +261,7 @@ class Portfolio(NameableObject):
            The database connection 
         """
         result = database.get_portfolio_by_id(id_)
-        if result is not None:
-            return cls(id_, result['name'], result['password'])
+        if result is None:
+            raise errors.PortfolioNotFound(id_)
+        return cls(id_, result['name'], result['password'])
 

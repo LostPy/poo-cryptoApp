@@ -43,3 +43,18 @@ class PortfolioAlreadyExists(PortfolioError):
 
     def __init__(self, portfolio_name: str):
         super().__init__(f"This portfolio already exists: '{portfolio_name}'")
+
+
+class PortfolioNotFound(PortfolioError):
+    """Exception raised when a portfolio id was not found in database."""
+    
+    def __init__(self, portfolio_id: int):
+        super().__init__(f"This portfolio doesn't exist: '{portfolio_id}'")
+
+
+class TransactionNotFound(TransactionError):
+    """Exception raised when a transaction id was not found in database."""
+
+    def __init__(self, transaction_id: int):
+        super().__init__(f"This transaction doesn't exist: '{transaction_id}'")
+
