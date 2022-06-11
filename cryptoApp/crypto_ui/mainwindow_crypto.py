@@ -155,6 +155,11 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         if event.key() == Qt.Key_Space and self.stackedWidget.currentIndex() == 1:
             self.on_buttonLogin_clicked()
 
+    def closeEvent(self, event):
+        if self.portfolio is not None:
+            self.portfolio.upload_currencies_in_db(self.db)
+        event.accept()
+
 
 if __name__ == "__main__":
     from PySide6.QtWidgets import QApplication, QWidget
