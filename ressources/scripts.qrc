@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="sql">
+        <file alias="init_db">scripts/script_init_db.sql</file>
+        <file alias="script_select_transactions">scripts/script_select_transactions.sql</file>
+    </qresource>
+</RCC>

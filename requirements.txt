@@ -1,0 +1,7 @@
+PySide6
+pycoingecko
+pandas
+tabulate
+matplotlib
+colorama
+click

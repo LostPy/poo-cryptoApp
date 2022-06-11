@@ -1,0 +1,54 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="common">
+        <file alias="delete-black.svg">icons/common/delete-black.svg</file>
+        <file alias="delete-line-black.svg">icons/common/delete-line-black.svg</file>
+        <file alias="delete-white.svg">icons/common/delete-white.svg</file>
+        <file alias="delete-line-white.svg">icons/common/delete-line-white.svg</file>
+        <file alias="filter-black.svg">icons/common/filter-black.svg</file>
+        <file alias="filter-line-black.svg">icons/common/filter-line-black.svg</file>
+        <file alias="filter-off-black.svg">icons/common/filter-off-black.svg</file>
+        <file alias="filter-white.svg">icons/common/filter-white.svg</file>
+        <file alias="filter-line-white.svg">icons/common/filter-line-white.svg</file>
+        <file alias="filter-off-white.svg">icons/common/filter-off-white.svg</file>
+        <file alias="information-black.svg">icons/common/information-black.svg</file>
+        <file alias="information-white.svg">icons/common/information-white.svg</file>
+        <file alias="login-black.svg">icons/common/login-black.svg</file>
+        <file alias="login-line-black.svg">icons/common/login-line-black.svg</file>
+        <file alias="login-white.svg">icons/common/login-white.svg</file>
+        <file alias="login-line-white.svg">icons/common/login-line-white.svg</file>
+        <file alias="logout-black.svg">icons/common/logout-black.svg</file>
+        <file alias="logout-line-black.svg">icons/common/logout-line-black.svg</file>
+        <file alias="logout-white.svg">icons/common/logout-white.svg</file>
+        <file alias="logout-line-white.svg">icons/common/logout-line-white.svg</file>
+        <file alias="refresh-black.svg">icons/common/refresh-black.svg</file>
+        <file alias="refresh-white.svg">icons/common/refresh-white.svg</file>
+        <file alias="settings-black.svg">icons/common/settings-black.svg</file>
+        <file alias="settings-line-black.svg">icons/common/settings-line-black.svg</file>
+        <file alias="settings-white.svg">icons/common/settings-white.svg</file>
+        <file alias="settings-line-white.svg">icons/common/settings-line-white.svg</file>
+    </qresource>
+    <qresource prefix="finance">
+        <file alias="bank-card-black.svg">icons/finance/bank-card-black.svg</file>
+        <file alias="bank-card-white.svg">icons/finance/bank-card-white.svg</file>
+        <file alias="bitcoin-black.svg">icons/finance/bit-coin-black.svg</file>
+        <file alias="bitcoin-white.svg">icons/finance/bit-coin-white.svg</file>
+        <file alias="currency-black.svg">icons/finance/currency-black.svg</file>
+        <file alias="currency-white.svg">icons/finance/currency-white.svg</file>
+        <file alias="euro-black.svg">icons/finance/euro-circle-black.svg</file>
+        <file alias="euro-white.svg">icons/finance/euro-circle-white.svg</file>
+        <file alias="exchange-black.svg">icons/finance/exchange-box-black.svg</file>
+        <file alias="exchange-white.svg">icons/finance/exchange-box-white.svg</file>
+    </qresource>
+    <qresource prefix="chart">
+        <file alias="bar-chart-black.svg">icons/chart/bar-chart-black.svg</file>
+        <file alias="bar-chart-white.svg">icons/chart/bar-chart-white.svg</file>
+        <file alias="bar-chart-box-black.svg">icons/chart/bar-chart-box-black.svg</file>
+        <file alias="bar-chart-box-white.svg">icons/chart/bar-chart-box-white.svg</file>
+        <file alias="line-chart-black.svg">icons/chart/line-chart-black.svg</file>
+        <file alias="line-chart-white.svg">icons/chart/line-chart-white.svg</file>
+        <file alias="pie-chart-black.svg">icons/chart/pie-chart-black.svg</file>
+        <file alias="pie-chart-white.svg">icons/chart/pie-chart-white.svg</file>
+    </qresource>
+
+</RCC>
