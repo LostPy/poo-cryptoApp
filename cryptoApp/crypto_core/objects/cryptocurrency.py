@@ -306,7 +306,11 @@ class Cryptocurrency(Currency):
             cls.CRYPTOCURRENCIES[id_].update()
             return cls.CRYPTOCURRENCIES[id_]
 
-        currency = cls.from_api_dict(crypto_api.get_coin_by_id(id_, vs_currency.gecko_id))
+        try:
+            currency = cls.from_api_dict(crypto_api.get_coin_by_id(id_, vs_currency.gecko_id))
+        except errors.ApiCurrencyNotFound:
+            raise errors.CurrencyApiNotFound(id_)
+
         if database is not None:
             cls.add_currencies_to_db([currency], database)
         return currency

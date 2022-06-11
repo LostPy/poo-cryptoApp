@@ -79,15 +79,11 @@ print("data inserted")
 
 currency_by_id = db.get_currency_by_id("bitcoin")
 currency_by_name = db.get_currency_by_name("Bitcoin")
-currency_by_name2 = db.get_currencies_contains_name("coin")
 print(currency_by_id)
 print(currency_by_name)
-print(currency_by_name2)
 
 portfolio_by_id = db.get_portfolio_by_id(1)
-portfolio_by_name = db.get_portfolio_by_name("test")
 print(portfolio_by_id)
-print(portfolio_by_name)
 
 transaction_by_id = db.get_transaction_by_id(1)
 transactions_filtered = db.get_transactions_filter(
