@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="mainPage">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -34,7 +34,7 @@
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <property name="iconSize">
            <size>
@@ -276,6 +276,9 @@
                          <property name="prefix">
                           <string/>
                          </property>
+                         <property name="decimals">
+                          <number>4</number>
+                         </property>
                          <property name="minimum">
                           <double>0.000000000000000</double>
                          </property>
@@ -286,6 +289,9 @@
                        </item>
                        <item>
                         <widget class="QDoubleSpinBox" name="spinBoxReceive">
+                         <property name="decimals">
+                          <number>4</number>
+                         </property>
                          <property name="minimum">
                           <double>0.000000000000000</double>
                          </property>
@@ -400,7 +406,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>21</hour>
+                        <hour>20</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -416,6 +422,9 @@
                    <layout class="QVBoxLayout" name="verticalLayout_16">
                     <item>
                      <widget class="QDoubleSpinBox" name="spinBoxSpendFilter">
+                      <property name="decimals">
+                       <number>4</number>
+                      </property>
                       <property name="minimum">
                        <double>0.000000000000000</double>
                       </property>
@@ -426,6 +435,9 @@
                     </item>
                     <item>
                      <widget class="QDoubleSpinBox" name="spinBoxReceiveFilter">
+                      <property name="decimals">
+                       <number>4</number>
+                      </property>
                       <property name="minimum">
                        <double>0.000000000000000</double>
                       </property>
@@ -441,7 +453,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>21</hour>
+                        <hour>20</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
