@@ -1,6 +1,7 @@
 from typing import Union
 from pathlib import Path
 from datetime import datetime
+import time
 import sqlite3
 import __main__  # to get the path of __main__ (Python file executed)
 
@@ -189,14 +190,21 @@ class CryptoDatabase:
         sql_instruction = str(script_file.readAll(), 'utf-8').format(where=where)
         script_file.close()
 
+
         if where_args is None:
             cursor.execute(sql_instruction)
         else:
             cursor.execute(sql_instruction, tuple(where_args))
 
+       
+
         if fetchone:
             return cursor.fetchone()
-        return cursor.fetchall()
+        start = time.time()
+        result = cursor.fetchall()
+        print(time.time() - start)
+        return result
+
 
     def get_currency_by_id(self, id_: int, crypto: Union[bool, int] = 1) -> dict:
         """Returns currency data from the id.

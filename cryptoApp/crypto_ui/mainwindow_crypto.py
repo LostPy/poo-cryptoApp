@@ -41,9 +41,9 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
 
     def init_comboBox_currency(self):
         self.currencies = list(Currency.CURRENCIES.values()) + list(Cryptocurrency.CRYPTOCURRENCIES.values())
-        currencies_name = ["Other"] + [currency.name for currency in self.currencies]
-        self.comboBoxSend.addItems(currencies_name)
-        self.comboBoxReceive.addItems(currencies_name)
+        currencies_name = [currency.name for currency in self.currencies]
+        self.comboBoxSend.addItems(["Other"] + currencies_name)
+        self.comboBoxReceive.addItems(["Other"] + currencies_name)
         self.comboBoxSendFilter.addItems(currencies_name)
         self.comboBoxReceiveFilter.addItems(currencies_name)
 
@@ -149,9 +149,23 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.spinBoxSpend.setValue(0)
         self.spinBoxReceive.setValue(0)
         self.init_model_transaction()
+        self.portfolio_chart.init_chart()
+    
+    @Slot()
+    def on_buttonUpdateTransaction_clicked(self):
+        parameters = dict()
+        if self.checkBoxSpentFilter.isChecked():
+            parameters['currency_send'] = self.currencies[self.comboBoxSendFilter.currentIndex()]
+        if self.checkBoxReceivedFilter.isChecked():
+            parameters['currency_received'] = self.currencies[self.comboBoxReceiveFilter.currentIndex()]
+        if self.checkBoxRangeDateFilter.isChecked():
+            parameters['range_date'] = (
+                self.dateEditFromFilter.date().toPython(),
+                self.dateEditToFilter.date().toPython() 
+            )
+        self.model_transaction.transactions = self.portfolio.get_transactions_filtered(self.db, **parameters)
 
     def keyPressEvent(self, event):
-        print(event.key() == Qt.Key_Space)
         if event.key() == Qt.Key_Space and self.stackedWidget.currentIndex() == 1:
             self.on_buttonLogin_clicked()
 
@@ -159,6 +173,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         if self.portfolio is not None:
             self.portfolio.upload_currencies_in_db(self.db)
         event.accept()
+
 
 
 if __name__ == "__main__":
