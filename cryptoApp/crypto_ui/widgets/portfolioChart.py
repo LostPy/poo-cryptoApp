@@ -16,7 +16,7 @@ class PortfolioChart(QChartView):
         serie = QPieSeries()
         serie.append([
             QPieSlice(currency.name, amount * currency.price)
-            for currency, amount in self.portfolio.currencies.items()
+            for currency, amount in self.portfolio.cryptocurrencies.items()
         ])  # Create slices with currency's name as label and total value as value
 
         for pieslice in serie.slices():

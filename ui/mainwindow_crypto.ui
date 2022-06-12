@@ -34,7 +34,7 @@
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="iconSize">
            <size>
@@ -62,7 +62,14 @@
              </layout>
             </item>
             <item>
-             <widget class="QListWidget" name="listWidget_fav"/>
+             <widget class="QListWidget" name="listWidget_fav">
+              <property name="movement">
+               <enum>QListView::Static</enum>
+              </property>
+              <property name="resizeMode">
+               <enum>QListView::Adjust</enum>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -400,7 +407,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>22</hour>
+                        <hour>21</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -441,7 +448,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>22</hour>
+                        <hour>21</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>

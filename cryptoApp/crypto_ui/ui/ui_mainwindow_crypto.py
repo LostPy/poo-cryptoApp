@@ -18,10 +18,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateEdit,
     QDoubleSpinBox, QFrame, QGroupBox, QHBoxLayout,
-    QHeaderView, QLabel, QLineEdit, QListWidget,
-    QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
-    QSpacerItem, QSplitter, QStackedWidget, QTabWidget,
-    QTreeView, QVBoxLayout, QWidget)
+    QHeaderView, QLabel, QLineEdit, QListView,
+    QListWidget, QListWidgetItem, QMainWindow, QPushButton,
+    QSizePolicy, QSpacerItem, QSplitter, QStackedWidget,
+    QTabWidget, QTreeView, QVBoxLayout, QWidget)
 
 from ..widgets import PortfolioChart
 from ressources import icons_rc
@@ -67,6 +67,8 @@ class Ui_MainWindow(object):
 
         self.listWidget_fav = QListWidget(self.widget)
         self.listWidget_fav.setObjectName(u"listWidget_fav")
+        self.listWidget_fav.setMovement(QListView.Static)
+        self.listWidget_fav.setResizeMode(QListView.Adjust)
 
         self.verticalLayout_6.addWidget(self.listWidget_fav)
 
@@ -313,7 +315,7 @@ class Ui_MainWindow(object):
 
         self.dateEditFromFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditFromFilter.setObjectName(u"dateEditFromFilter")
-        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(22, 0, 0)))
+        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(21, 0, 0)))
 
         self.verticalLayout_14.addWidget(self.dateEditFromFilter)
 
@@ -338,7 +340,7 @@ class Ui_MainWindow(object):
 
         self.dateEditToFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditToFilter.setObjectName(u"dateEditToFilter")
-        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(22, 0, 0)))
+        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(21, 0, 0)))
 
         self.verticalLayout_16.addWidget(self.dateEditToFilter)
 
