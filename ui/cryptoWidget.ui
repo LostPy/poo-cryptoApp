@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_5">
    <item>
-    <widget class="QFrame" name="frame">
+    <widget class="QLabel" name="labelLogo">
      <property name="minimumSize">
       <size>
        <width>100</width>
@@ -28,11 +28,8 @@
        <height>100</height>
       </size>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>
@@ -122,6 +119,9 @@
              <property name="keyboardTracking">
               <bool>true</bool>
              </property>
+             <property name="maximum">
+              <double>999999999999.000000000000000</double>
+             </property>
             </widget>
            </item>
            <item>
@@ -131,6 +131,9 @@
              </property>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::NoButtons</enum>
+             </property>
+             <property name="maximum">
+              <double>999999999.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -174,6 +177,9 @@
              </property>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::NoButtons</enum>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
              </property>
             </widget>
            </item>

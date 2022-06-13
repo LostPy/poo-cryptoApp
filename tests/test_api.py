@@ -28,5 +28,10 @@ def test_coin_by_id():
     print(get_coin_by_id('bitcoin', 'eur'))
 
 
+def test_bad_id():
+    print(get_coin_by_id('bitsdfscoin', 'eur'))  # raise an ApiCurrencyNotFound
+    #get_market_chart('bitcoin', 'aezet', 7)  # raise an ApiCurrencyNotFound
+
+
 if __name__ == '__main__':
     test_coin_by_id()

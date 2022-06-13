@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QDoubleSpinBox, QFrame,
-    QHBoxLayout, QLabel, QLineEdit, QSizePolicy,
-    QSpacerItem, QSpinBox, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QDoubleSpinBox, QHBoxLayout,
+    QLabel, QLineEdit, QSizePolicy, QSpacerItem,
+    QSpinBox, QVBoxLayout, QWidget)
 
 class Ui_CryptoWidget(object):
     def setupUi(self, CryptoWidget):
@@ -26,14 +26,12 @@ class Ui_CryptoWidget(object):
         CryptoWidget.resize(624, 120)
         self.horizontalLayout_5 = QHBoxLayout(CryptoWidget)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.frame = QFrame(CryptoWidget)
-        self.frame.setObjectName(u"frame")
-        self.frame.setMinimumSize(QSize(100, 100))
-        self.frame.setMaximumSize(QSize(100, 100))
-        self.frame.setFrameShape(QFrame.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Raised)
+        self.labelLogo = QLabel(CryptoWidget)
+        self.labelLogo.setObjectName(u"labelLogo")
+        self.labelLogo.setMinimumSize(QSize(100, 100))
+        self.labelLogo.setMaximumSize(QSize(100, 100))
 
-        self.horizontalLayout_5.addWidget(self.frame)
+        self.horizontalLayout_5.addWidget(self.labelLogo)
 
         self.verticalLayout_5 = QVBoxLayout()
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -94,6 +92,7 @@ class Ui_CryptoWidget(object):
         self.spinBoxAmount.setReadOnly(True)
         self.spinBoxAmount.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.spinBoxAmount.setKeyboardTracking(True)
+        self.spinBoxAmount.setMaximum(999999999999.000000000000000)
 
         self.verticalLayout.addWidget(self.spinBoxAmount)
 
@@ -101,6 +100,7 @@ class Ui_CryptoWidget(object):
         self.spinBoxValue.setObjectName(u"spinBoxValue")
         self.spinBoxValue.setReadOnly(True)
         self.spinBoxValue.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.spinBoxValue.setMaximum(999999999.000000000000000)
 
         self.verticalLayout.addWidget(self.spinBoxValue)
 
@@ -139,6 +139,7 @@ class Ui_CryptoWidget(object):
         self.spinBoxCirculatingSupply.setObjectName(u"spinBoxCirculatingSupply")
         self.spinBoxCirculatingSupply.setReadOnly(True)
         self.spinBoxCirculatingSupply.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.spinBoxCirculatingSupply.setMaximum(999999999)
 
         self.verticalLayout_2.addWidget(self.spinBoxCirculatingSupply)
 
@@ -166,6 +167,7 @@ class Ui_CryptoWidget(object):
 
     def retranslateUi(self, CryptoWidget):
         CryptoWidget.setWindowTitle(QCoreApplication.translate("CryptoWidget", u"Form", None))
+        self.labelLogo.setText("")
         self.labelName.setText(QCoreApplication.translate("CryptoWidget", u"Crypto name", None))
         self.labelRank.setText(QCoreApplication.translate("CryptoWidget", u"#rank", None))
         self.label.setText(QCoreApplication.translate("CryptoWidget", u"Amount", None))

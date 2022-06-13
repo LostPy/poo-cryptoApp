@@ -1,6 +1,7 @@
 from typing import Union
 from pathlib import Path
 from datetime import datetime
+import time
 import sqlite3
 import __main__  # to get the path of __main__ (Python file executed)
 
@@ -100,7 +101,7 @@ class CryptoDatabase:
             return cursor.fetchone()
         return cursor.fetchall()
 
-    def get_portofolios(self,
+    def get_portfolios(self,
                         where: str = "",
                         where_args: tuple = None,
                         fetchone: bool = False) -> Union[dict, list[dict]]:
@@ -122,9 +123,9 @@ class CryptoDatabase:
         """
         cursor = self.connection.cursor()
         sql_instruction = select(
-            "Portofolio",
+            "Portfolio",
             columns=[
-                "idPortofolio",
+                "idPortfolio",
                 "name",
                 "password"
             ],
@@ -139,13 +140,13 @@ class CryptoDatabase:
             return cursor.fetchone()
         return cursor.fetchall()
 
-    def get_currencies_portofolios(self,
-                                   portofolio_id: int) -> list[dict]:
+    def get_currencies_portfolios(self,
+                                   portfolio_id: int) -> list[dict]:
         """Returns currencies and corresponding amount to a portfolio.
 
         Parameters
         ----------
-        portofolio_id : int
+        portfolio_id : int
             The portfolio's id
 
         Returns
@@ -156,11 +157,11 @@ class CryptoDatabase:
         cursor.execute("""
             SELECT idCurrency, name, ticker, price, circulatingSupply,
             last_update, rank, isCrypto, amount
-            FROM PortofoliosCurrencies
-            INNER JOIN Currency ON PortofoliosCurrencies.currency = Currency.idCurrency
-            WHERE portofolio=?
+            FROM PortfoliosCurrencies
+            INNER JOIN Currency ON PortfoliosCurrencies.currency = Currency.idCurrency
+            WHERE portfolio=?
             """,
-            (portofolio_id, ))
+            (portfolio_id, ))
         return cursor.fetchall()
 
     def get_transactions(self,
@@ -189,14 +190,21 @@ class CryptoDatabase:
         sql_instruction = str(script_file.readAll(), 'utf-8').format(where=where)
         script_file.close()
 
+
         if where_args is None:
             cursor.execute(sql_instruction)
         else:
             cursor.execute(sql_instruction, tuple(where_args))
 
+       
+
         if fetchone:
             return cursor.fetchone()
-        return cursor.fetchall()
+        start = time.time()
+        result = cursor.fetchall()
+        print(time.time() - start)
+        return result
+
 
     def get_currency_by_id(self, id_: int, crypto: Union[bool, int] = 1) -> dict:
         """Returns currency data from the id.
@@ -242,7 +250,7 @@ class CryptoDatabase:
             fetchone=True
         )
 
-    def get_portofolio_by_id(self, id_: int) -> dict:
+    def get_portfolio_by_id(self, id_: int) -> dict:
         """Returns the portfolio which match with id.
 
         Parameters
@@ -255,8 +263,8 @@ class CryptoDatabase:
         dict : The portfolio data
 
         """
-        return self.get_portofolios(
-            where=where({"idPortofolio": ("=", id_)}), fetchone=True)
+        return self.get_portfolios(
+            where=where({"idPortfolio": ("=", id_)}), fetchone=True)
 
     def get_transaction_by_id(self, id_: int) -> dict:
         """Returns the transaction from id.
@@ -290,7 +298,7 @@ class CryptoDatabase:
         return self.get_currencies(
             where=where({"rank": ('<=', rank_max), "isCrypto": ('=', 1)}))
 
-    def get_transactions_filter(self, portofolio_id: int, /,
+    def get_transactions_filter(self, portfolio_id: int, /,
                                 currency_send_id: int = None,
                                 currency_receive_id: int = None,
                                 range_amount_send: tuple[float, float] = None,
@@ -300,7 +308,7 @@ class CryptoDatabase:
 
         Parameters
         ----------
-        portofolio_id : int
+        portfolio_id : int
            The portfolio's id 
         currency_send_id : int, optional
            The currency id of currency sent, default None (not constraint on this column) 
@@ -323,7 +331,7 @@ class CryptoDatabase:
         -------
         list[dict] : Data of transactions
         """
-        filter_ = dict(portofolio=("=", portofolio_id))
+        filter_ = dict(portfolio=("=", portfolio_id))
 
         if currency_send_id is not None:
             filter_['currencySend'] = ('=', currency_send_id)
@@ -457,18 +465,18 @@ class CryptoDatabase:
         if commit:
             self.connection.commit()
 
-    def insert_portofolio(self, portofolio: dict, commit: bool = True):
+    def insert_portfolio(self, portfolio: dict, commit: bool = True):
         """Insert a portfolio in database.
 
         Parameters
         ----------
-        portofolio : dict
-            portofolio's data
+        portfolio : dict
+            portfolio's data
         commit : bool, optional
            If True, commit the insert. 
         """
         sql_instruction = insert(
-            'Portofolio',
+            'Portfolio',
             [
                 'name',
                 'password'
@@ -477,14 +485,17 @@ class CryptoDatabase:
 
         try:
             values = (
-                portofolio['name'],
-                portofolio['password']
+                portfolio['name'],
+                portfolio['password']
             )
         except KeyError as e:
             raise errors.DbRequestMissingData(e.args[0])
 
         cursor = self.connection.cursor()
-        cursor.execute(sql_instruction, values)
+        try:
+            cursor.execute(sql_instruction, values)
+        except sqlite3.IntegrityError:
+            raise errors.PortfolioAlreadyExists(portfolio['name'])
         id_ = cursor.lastrowid
 
         if commit:
@@ -492,8 +503,8 @@ class CryptoDatabase:
 
         return id_
 
-    def insert_currency_portofolio(self,
-                                   portofolio_id: int,
+    def insert_currency_portfolio(self,
+                                   portfolio_id: int,
                                    currency_id: str,
                                    amount: float,
                                    commit: bool = True):
@@ -501,7 +512,7 @@ class CryptoDatabase:
 
         Parameters
         ----------
-        portofolio_id : int
+        portfolio_id : int
            The portfolio's id 
         currency_id : str
            The currency's id 
@@ -511,11 +522,11 @@ class CryptoDatabase:
            If True, commit insert 
         """
         sql_instruction = insert(
-            "PortofoliosCurrencies",
-            ['portofolio', 'currency', 'amount'])
+            "PortfoliosCurrencies",
+            ['portfolio', 'currency', 'amount'])
 
         cursor = self.connection.cursor()
-        cursor.execute(sql_instruction, (portofolio_id, currency_id, amount))
+        cursor.execute(sql_instruction, (portfolio_id, currency_id, amount))
 
         if commit:
             self.connection.commit()
@@ -538,7 +549,7 @@ class CryptoDatabase:
                 'amountReceived',
                 'currencySend',
                 'currencyReceived',
-                'portofolio'
+                'portfolio'
             ]
         )
 
@@ -549,7 +560,7 @@ class CryptoDatabase:
                 transaction['amount_received'],
                 transaction['currency_send_id'],
                 transaction['currency_received_id'],
-                transaction['portofolio_id']
+                transaction['portfolio_id']
             )
         except KeyError as e:
             raise errors.DbRequestMissingData(e.args[0])
@@ -597,30 +608,30 @@ class CryptoDatabase:
         if commit:
             self.connection.commit()
 
-    def update_portofolio(self, portofolio: dict, commit: bool = True):
+    def update_portfolio(self, portfolio: dict, commit: bool = True):
         """Update portfolio data.
 
         Parameters
         ----------
-        portofolio : dict
+        portfolio : dict
            Portfolio data 
         commit : bool, optional
            If True, commit update
         """
         sql_instruction = update(
-            'Portofolio',
+            'Portfolio',
             [
                 'name',
                 'password'
             ],
-            where="WHERE idPortofolio=?"
+            where="WHERE idPortfolio=?"
         )
 
         try:
             values = (
-                portofolio['name'],
-                portofolio['password'],
-                portofolio['id']
+                portfolio['name'],
+                portfolio['password'],
+                portfolio['id']
             )
         except KeyError as e:
             raise errors.DbRequestMissingData(e.args[0])
@@ -631,8 +642,8 @@ class CryptoDatabase:
         if commit:
             self.connection.commit()
 
-    def update_currency_portofolio(self,
-                                   portofolio_id: int,
+    def update_currency_portfolio(self,
+                                   portfolio_id: int,
                                    currency_id: str,
                                    amount: float,
                                    commit: bool = True):
@@ -640,7 +651,7 @@ class CryptoDatabase:
 
         Parameters
         ----------
-        portofolio_id : int
+        portfolio_id : int
            Portfolio's id
         currency_id : str
            Currency's id 
@@ -650,12 +661,12 @@ class CryptoDatabase:
            If True, commit update
         """
         sql_instruction = update(
-            "PortofoliosCurrencies",
+            "PortfoliosCurrencies",
             ['amount'],
-            where="WHERE portofolio=? AND currency=?")
+            where="WHERE portfolio=? AND currency=?")
 
         cursor = self.connection.cursor()
-        cursor.execute(sql_instruction, (amount, portofolio_id, currency_id))
+        cursor.execute(sql_instruction, (amount, portfolio_id, currency_id))
 
         if commit:
             self.connection.commit()
@@ -716,7 +727,7 @@ class CryptoDatabase:
         if commit:
             self.connection.commit()
 
-    def delete_portofolio(self, id_: int, commit: bool = True):
+    def delete_portfolio(self, id_: int, commit: bool = True):
         """Delete the portfolio specified by the id.
 
         Parameters
@@ -727,21 +738,21 @@ class CryptoDatabase:
            If True, commit delete 
         """
         cursor = self.connection.cursor()
-        cursor.execute(delete('Portofolio', "WHERE idPortofolio=?"), (id_, ))
-        cursor.execute(delete('PortofoliosCurrencies', "WHERE portofolio=?"), (id_, ))
-        cursor.execute(delete('CryptoTransaction', "WHERE portofolio=?"), (id_, ))
+        cursor.execute(delete('Portfolio', "WHERE idPortfolio=?"), (id_, ))
+        cursor.execute(delete('PortfoliosCurrencies', "WHERE portfolio=?"), (id_, ))
+        cursor.execute(delete('CryptoTransaction', "WHERE portfolio=?"), (id_, ))
         if commit:
             self.connection.commit()
 
-    def delete_currency_portofolio(self,
-                                   portofolio_id: int,
+    def delete_currency_portfolio(self,
+                                   portfolio_id: int,
                                    currency_id: str,
                                    commit: bool = True):
         """Delete a currency/portfolio association.
 
         Parameters
         ----------
-        portofolio_id : int
+        portfolio_id : int
            The portfolio's id 
         currency_id : str
            The currency's id 
@@ -749,9 +760,9 @@ class CryptoDatabase:
            If True, commit delete 
         """
         sql_instruction = delete(
-            'PortofoliosCurrencies', "WHERE portofolio=? AND currency=?")
+            'PortfoliosCurrencies', "WHERE portfolio=? AND currency=?")
         cursor = self.connection.cursor()
-        cursor.execute(sql_instruction, (portofolio_id, currency_id))
+        cursor.execute(sql_instruction, (portfolio_id, currency_id))
         if commit:
             self.connection.commit()
 
@@ -810,6 +821,7 @@ class CryptoDatabase:
             raise errors.DatabaseAlreadyExists(cls.PATH)
 
         elif cls.PATH.exists():
+            self.LOGGER.debug("Remove existing database to re-initialize")
             cls.remove()
 
         try:

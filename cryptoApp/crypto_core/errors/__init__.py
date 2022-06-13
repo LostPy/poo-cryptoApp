@@ -29,4 +29,14 @@ from .objects import (
     CurrencyDbNotFound,
     CurrencyApiNotFound,
     PortfolioAlreadyExists,
+    PortfolioNotFound,
+    TransactionNotFound,
 )
+
+from .api import (
+    ApiException,
+    ApiConnectionError,
+    ApiRequestsError,
+    ApiCurrencyNotFound,
+)
+

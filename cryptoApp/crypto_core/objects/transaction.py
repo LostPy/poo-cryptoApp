@@ -3,6 +3,7 @@ import operator as op
 
 from . import CryptoAppObject, Currency, Cryptocurrency
 from ..db import CryptoDatabase
+from .. import errors
 
 
 class Transaction(CryptoAppObject):
@@ -147,7 +148,7 @@ class Transaction(CryptoAppObject):
 
 
     @classmethod
-    def from_filter(cls, portofolio_id: int, database: CryptoDatabase, /,
+    def from_filter(cls, portfolio_id: int, database: CryptoDatabase, /,
                     currency_send: Currency = None,
                     currency_received: Currency = None,
                     **kwargs) -> list:
@@ -155,7 +156,7 @@ class Transaction(CryptoAppObject):
 
         Parameters
         ----------
-        portofolio_id : int
+        portfolio_id : int
             The portfolio's id associated with transactions to get.
         database : CryptoDatabase
             The database connection.
@@ -175,7 +176,7 @@ class Transaction(CryptoAppObject):
             kwargs['currency_send_id'] = currency_send.id
 
         if currency_received is not None:
-            kwargs['currency_received_id'] = currency_received.id
+            kwargs['currency_receive_id'] = currency_received.id
         return [
             cls(
                 dico['idTransaction'],
@@ -205,7 +206,7 @@ class Transaction(CryptoAppObject):
                 ),
                 date=dico['date']
             )
-            for dico in database.get_transactions_filter(portofolio_id, **kwargs)
+            for dico in database.get_transactions_filter(portfolio_id, **kwargs)
         ]
 
     @classmethod
@@ -213,7 +214,7 @@ class Transaction(CryptoAppObject):
                         send: tuple[Currency, float],
                         received: tuple[Currency, float],
                         date: datetime,
-                        portofolio_id: int,
+                        portfolio_id: int,
                         database: CryptoDatabase):
         """Create and returns a new instance of Transaction. \
                 This transaction is saved in database.
@@ -226,7 +227,7 @@ class Transaction(CryptoAppObject):
             The currency received (bought)
         date : datetime
             The date of the transaction
-        portofolio_id : int
+        portfolio_id : int
            The portfolio's id for this transaction. 
         database : CryptoDatabase
             The database connection
@@ -241,7 +242,7 @@ class Transaction(CryptoAppObject):
             'amount_received': received[1],
             'currency_send_id': send[0].id,
             'currency_received_id': received[0].id,
-            'portofolio_id': portofolio_id
+            'portfolio_id': portfolio_id
         })
         return cls(
             id_,
@@ -266,33 +267,34 @@ class Transaction(CryptoAppObject):
         Transaction : The new instance of Transaction
         """
         result = database.get_transaction_by_id(id_)
-        if result is not None:
-            return cls(
-                result['idTransaction'],
-                send=(
-                    cls.__crypto_from_db({
-                        'idCurrency': result['idCurrencySend'],
-                        'name': result['nameSend'],
-                        'ticker': result['tickerSend'],
-                        'price': result['priceSend'],
-                        'circulatingSupply': result['circulatingSupplySend'],
-                        'last_update': result['lastUpdateSend'],
-                        'rank': result['rankSend']
-                    }),
-                    result['amountSend']
-                ),
-                received=(
-                    cls.__crypto_from_db({
-                        'idCurrency': result['idCurrencyReceived'],
-                        'name': result['nameReceived'],
-                        'ticker': result['tickerReceived'],
-                        'price': result['priceReceived'],
-                        'circulatingSupply': result['circulatingSupplyReceived'],
-                        'last_update': result['lastUpdateReceived'],
-                        'rank': result['rankReceived']
-                    }),
-                    result['amountReceived']
-                ),
-                date=result['date']
-            )
+        if result is None:
+            raise errors.TransactionNotFound(id_)
+        return cls(
+            result['idTransaction'],
+            send=(
+                cls.__crypto_from_db({
+                    'idCurrency': result['idCurrencySend'],
+                    'name': result['nameSend'],
+                    'ticker': result['tickerSend'],
+                    'price': result['priceSend'],
+                    'circulatingSupply': result['circulatingSupplySend'],
+                    'last_update': result['lastUpdateSend'],
+                    'rank': result['rankSend']
+                }),
+                result['amountSend']
+            ),
+            received=(
+                cls.__crypto_from_db({
+                    'idCurrency': result['idCurrencyReceived'],
+                    'name': result['nameReceived'],
+                    'ticker': result['tickerReceived'],
+                    'price': result['priceReceived'],
+                    'circulatingSupply': result['circulatingSupplyReceived'],
+                    'last_update': result['lastUpdateReceived'],
+                    'rank': result['rankReceived']
+                }),
+                result['amountReceived']
+            ),
+            date=result['date']
+        )
 

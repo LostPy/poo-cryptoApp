@@ -25,24 +25,13 @@ class Cryptocurrency(Currency):
     last_update : datetime.datetime
         datetime of last update crypto's data.
 
-    Properties
-    ----------
-    logo : Path | None
-        Returns the path of crypto's logo if this logo exists.
-
     Class attributes
     ----------------
     CRYPTOCURRENCIES : dict[str, Cryptocurrency]
         A dictionary with all cryptocurrency already loaded.
-    LOGO_DIR_PATH : pathlib.Path
-        The directory path for crypto's logos.
-    LOGO_FILENAME_FORMAT : str
-        The format of filename for crypto's logo.
     """
 
     CRYPTOCURRENCIES = dict()  # Un dictionnaire avec les cryptomonaies déjà chargées
-    LOGO_DIR_PATH = Path(__main__.__file__).resolve().parent / 'logos'
-    LOGO_FILENAME_FORMAT = "{id}.png"
 
     def __init__(self, id_: str, name: str, ticker: str, *,
                  price: float = None,
@@ -84,20 +73,6 @@ class Cryptocurrency(Currency):
         """
         return self.id
 
-    @property
-    def logo(self):
-        """Path of the logo, returns None if there is not \
-        logo avaible for this cryptocurrency.
-
-        Returns
-        -------
-        Path | None : path of the logo.
-        """
-        path = self.logo_path(self.id)
-        if path.exists():
-            return path
-        return None
-
     def get_price_change(self, vs_currency: Currency):
         """Returns the evolution of the price during last 24h.
 
@@ -126,7 +101,7 @@ class Cryptocurrency(Currency):
         -------
         pandas.DataFrame : price evolution of currency in a table.
         """
-        return crypto_api.get_market_chart(self.id, vs_currency.id, days)
+        return crypto_api.get_market_chart(self.id, vs_currency.gecko_id, days)
 
     def get_market_chart_by_range(self,
                                   vs_currency: Currency,
@@ -161,10 +136,10 @@ class Cryptocurrency(Currency):
             dictionary with data from API.
         """
         self.name = d['name']
-        self.ticker = d['symbol']
-        self.price = d['current_price']
+        self.ticker = d['ticker']
+        self.price = d['price']
         self.circulating_supply = int(d['circulating_supply'])
-        self.rank = d['market_cap_rank']
+        self.rank = d['rank']
         self.last_update = datetime.now()
         return self
 
@@ -209,7 +184,6 @@ class Cryptocurrency(Currency):
             'name': self.name,
             'ticker': self.ticker,
             'price': self.price,
-            'logo': self.logo_path(self.id),
             'circulating_supply': self.circulating_supply,
             'last_update': self.last_update,
             'rank': self.rank,
@@ -261,15 +235,6 @@ class Cryptocurrency(Currency):
         -------
         Cryptocurrency : The new instance
         """
-        logo_path = cls.logo_path(d['id'])
-        if not logo_path.exists():
-            # if logo_path doesn't exists, this function download the image
-            # stream to guarantee no interruptions
-            r = requests.get(d['image'], stream=True)
-            r.raw.decode_content = True  # To don't have a image file's size to 0
-            with open(logo_path, 'wb') as f:
-                shutil.copyfileobj(r.raw, f)
-
         currency = cls(
             d['id'],
             name=d['name'],
@@ -306,7 +271,11 @@ class Cryptocurrency(Currency):
             cls.CRYPTOCURRENCIES[id_].update()
             return cls.CRYPTOCURRENCIES[id_]
 
-        currency = cls.from_api_dict(crypto_api.get_coin_by_id(id_, vs_currency.gecko_id))
+        try:
+            currency = cls.from_api_dict(crypto_api.get_coin_by_id(id_, vs_currency.gecko_id))
+        except errors.ApiCurrencyNotFound:
+            raise errors.CurrencyApiNotFound(id_)
+
         if database is not None:
             cls.add_currencies_to_db([currency], database)
         return currency
@@ -438,17 +407,3 @@ class Cryptocurrency(Currency):
         """
         database.delete_currencies([c.id for c in currencies], commit=commit)
 
-    @classmethod
-    def logo_path(cls, id_: str) -> Path:
-        """Returns the logo path for currency id given.
-
-        Parameters
-        ----------
-        id_ : str
-            Currency's ID
-
-        Returns
-        -------
-        Path : The path of logo.
-        """
-        return cls.LOGO_DIR_PATH / cls.LOGO_FILENAME_FORMAT.format(id=id_)

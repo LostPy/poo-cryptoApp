@@ -1,7 +1,7 @@
 from PySide6.QtCharts import QChartView, QChart, QPieSeries, QPieSlice
 from PySide6.QtGui import QPainter
 
-from crypto_core.objects import Portofolio
+from crypto_core.objects import Portfolio
 
 
 class PortfolioChart(QChartView):
@@ -16,7 +16,7 @@ class PortfolioChart(QChartView):
         serie = QPieSeries()
         serie.append([
             QPieSlice(currency.name, amount * currency.price)
-            for currency, amount in self.portfolio.currencies.items()
+            for currency, amount in self.portfolio.cryptocurrencies.items()
         ])  # Create slices with currency's name as label and total value as value
 
         for pieslice in serie.slices():
@@ -29,7 +29,7 @@ class PortfolioChart(QChartView):
         self.setChart(chart)
         self.setRenderHint(QPainter.Antialiasing)  # to don't have pixelized curves
 
-    def set_portfolio(self, portfolio: Portofolio, /,
+    def set_portfolio(self, portfolio: Portfolio, /,
                  title: str = "",
                  theme=QChart.ChartThemeLight):
         self.portfolio = portfolio

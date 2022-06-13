@@ -1,7 +1,7 @@
 from .objects import (
     Currency,
     Cryptocurrency,
-    Portofolio,
+    Portfolio,
     Transaction
 )
 from . import objects, db, errors
