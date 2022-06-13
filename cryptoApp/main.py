@@ -19,9 +19,6 @@ main_logger = new_logger("MAIN", level=logging.DEBUG)
 # -------------------------------
 CryptoDatabase.LOGGER.setLevel(logging.DEBUG)
 
-if not Cryptocurrency.LOGO_DIR_PATH.exists():
-    Cryptocurrency.LOGO_DIR_PATH.mkdir()
-    
 if not CryptoDatabase.PATH.exists():
     CryptoDatabase.init_database()
     database = CryptoDatabase.create_connection()

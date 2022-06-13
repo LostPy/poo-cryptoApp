@@ -29,8 +29,5 @@ class CryptoWidget(QWidget, Ui_CryptoWidget):
         self.spinBoxCirculatingSupply.setValue(self.currency.circulating_supply // 1e6)
         self.spinBoxCirculatingSupply.setSuffix(" M")
         self.lineEditTicker.setText(self.currency.ticker)
-        if self.currency.logo is None:
-            self.labelLogo.setPixmap(QPixmap(":/finance/bitcoin-black.svg"))
-        else:
-            self.labelLogo.setPixmap(QPixmap(str(self.currency.logo)))
+        self.labelLogo.setPixmap(QPixmap(":/finance/bitcoin-black.svg"))
 

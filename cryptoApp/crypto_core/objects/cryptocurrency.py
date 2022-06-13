@@ -25,24 +25,13 @@ class Cryptocurrency(Currency):
     last_update : datetime.datetime
         datetime of last update crypto's data.
 
-    Properties
-    ----------
-    logo : Path | None
-        Returns the path of crypto's logo if this logo exists.
-
     Class attributes
     ----------------
     CRYPTOCURRENCIES : dict[str, Cryptocurrency]
         A dictionary with all cryptocurrency already loaded.
-    LOGO_DIR_PATH : pathlib.Path
-        The directory path for crypto's logos.
-    LOGO_FILENAME_FORMAT : str
-        The format of filename for crypto's logo.
     """
 
     CRYPTOCURRENCIES = dict()  # Un dictionnaire avec les cryptomonaies déjà chargées
-    LOGO_DIR_PATH = Path(__main__.__file__).resolve().parent / 'logos'
-    LOGO_FILENAME_FORMAT = "{id}.png"
 
     def __init__(self, id_: str, name: str, ticker: str, *,
                  price: float = None,
@@ -83,20 +72,6 @@ class Cryptocurrency(Currency):
         str : id for CoinGecko API
         """
         return self.id
-
-    @property
-    def logo(self):
-        """Path of the logo, returns None if there is not \
-        logo avaible for this cryptocurrency.
-
-        Returns
-        -------
-        Path | None : path of the logo.
-        """
-        path = self.logo_path(self.id)
-        if path.exists():
-            return path
-        return None
 
     def get_price_change(self, vs_currency: Currency):
         """Returns the evolution of the price during last 24h.
@@ -209,7 +184,6 @@ class Cryptocurrency(Currency):
             'name': self.name,
             'ticker': self.ticker,
             'price': self.price,
-            'logo': self.logo_path(self.id),
             'circulating_supply': self.circulating_supply,
             'last_update': self.last_update,
             'rank': self.rank,
@@ -261,15 +235,6 @@ class Cryptocurrency(Currency):
         -------
         Cryptocurrency : The new instance
         """
-        logo_path = cls.logo_path(d['id'])
-        if not logo_path.exists():
-            # if logo_path doesn't exists, this function download the image
-            # stream to guarantee no interruptions
-            r = requests.get(d['image'], stream=True)
-            r.raw.decode_content = True  # To don't have a image file's size to 0
-            with open(logo_path, 'wb') as f:
-                shutil.copyfileobj(r.raw, f)
-
         currency = cls(
             d['id'],
             name=d['name'],
@@ -442,17 +407,3 @@ class Cryptocurrency(Currency):
         """
         database.delete_currencies([c.id for c in currencies], commit=commit)
 
-    @classmethod
-    def logo_path(cls, id_: str) -> Path:
-        """Returns the logo path for currency id given.
-
-        Parameters
-        ----------
-        id_ : str
-            Currency's ID
-
-        Returns
-        -------
-        Path : The path of logo.
-        """
-        return cls.LOGO_DIR_PATH / cls.LOGO_FILENAME_FORMAT.format(id=id_)
