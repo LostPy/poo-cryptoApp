@@ -21,7 +21,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.logger = new_logger("Mainwindow", level=logging.DEBUG)
         self.logger.debug("Initialization of window...")
         self.setupUi(self)
-        self.setWindowIcon(QIcon(":/icons/finance/bitcoin-black.svg"))
+        self.setWindowIcon(QIcon(":/finance/bitcoin-black.svg"))
         try:
             crypto_api.ping()
         except errors.ApiConnectionError:

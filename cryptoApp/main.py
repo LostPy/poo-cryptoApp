@@ -19,22 +19,15 @@ main_logger = new_logger("MAIN", level=logging.DEBUG)
 # -------------------------------
 CryptoDatabase.LOGGER.setLevel(logging.DEBUG)
 
-if not Cryptocurrency.LOGO_DIR_PATH.exists():
-    main_logger.info("Create logos directory...")
-    Cryptocurrency.LOGO_DIR_PATH.mkdir()
-    
 if not CryptoDatabase.PATH.exists():
-    main_logger.info("Initialize the database")
     CryptoDatabase.init_database()
     database = CryptoDatabase.create_connection()
     Currency.init_currencies(database)
-    main_logger.info("Initialize cryptocurrencies with the top")
-    # Ajoute une base de cryptomonaie dans la bdd
+    # Add a base of cryptocurrencies in database
     Cryptocurrency.get_top_coins_market(Currency.CURRENCIES['euro'], database=database)
     database.close()
     del database
 
-main_logger.info("Initialize currencies objects")
 database = CryptoDatabase.create_connection()
 if len(Currency.CURRENCIES) == 0:
     Currency.init_currencies(database)
@@ -45,7 +38,7 @@ del database
 
 # Initialisation de l'interface
 # -----------------------------
-main_logger.info("Initialization of the application...")
+main_logger.info("Initialisation of the application...")
 app = QApplication(sys.argv)
 w = MainWindowCrypto()
 w.show()

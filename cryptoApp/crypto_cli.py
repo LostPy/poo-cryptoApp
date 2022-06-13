@@ -18,10 +18,6 @@ from utils.hashstring import hash_string
 ######################
 CryptoDatabase.LOGGER.setLevel(ERROR)
 
-if not Cryptocurrency.LOGO_DIR_PATH.exists():
-    Cryptocurrency.LOGO_DIR_PATH.mkdir()
-
-    
 if not CryptoDatabase.PATH.exists():
     CryptoDatabase.init_database()
     database = CryptoDatabase.create_connection()

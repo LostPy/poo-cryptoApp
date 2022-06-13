@@ -1,8 +1,10 @@
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
-from PySide6.QtGui import QImage
+from PySide6.QtGui import QPixmap
 
 from crypto_core.objects import Currency
 from ..ui import Ui_CryptoWidget
+
+from ressources import icons_rc
 
 
 class CryptoWidget(QWidget, Ui_CryptoWidget):
@@ -27,3 +29,5 @@ class CryptoWidget(QWidget, Ui_CryptoWidget):
         self.spinBoxCirculatingSupply.setValue(self.currency.circulating_supply // 1e6)
         self.spinBoxCirculatingSupply.setSuffix(" M")
         self.lineEditTicker.setText(self.currency.ticker)
+        self.labelLogo.setPixmap(QPixmap(":/finance/bitcoin-black.svg"))
+
