@@ -49,7 +49,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
     def init_tab_transaction(self):
         self.init_model_transaction()
         self.buttonAdd.setEnabled(False)
-        self.buttonUpdateFilter.setEnabled(False)
+        self.buttonUpdateTransaction.setEnabled(False)
 
     def init_comboBox_currency(self):
         self.currencies = list(Currency.CURRENCIES.values()) + list(Cryptocurrency.CRYPTOCURRENCIES.values())
