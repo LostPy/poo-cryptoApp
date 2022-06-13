@@ -12,10 +12,11 @@ from PySide6.QtCharts import QChartView
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateEdit,
     QDoubleSpinBox, QFrame, QGroupBox, QHBoxLayout,
     QHeaderView, QLabel, QLineEdit, QListView,
@@ -26,11 +27,14 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateEdit,
 from ..widgets import PortfolioChart
 from ressources import icons_rc
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(787, 547)
+        MainWindow.resize(1028, 592)
+        self.actionQuit = QAction(MainWindow)
+        self.actionQuit.setObjectName(u"actionQuit")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -344,7 +348,7 @@ class Ui_MainWindow(object):
 
         self.dateEditFromFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditFromFilter.setObjectName(u"dateEditFromFilter")
-        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(18, 0, 0)))
+        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(17, 0, 0)))
 
         self.verticalLayout_14.addWidget(self.dateEditFromFilter)
 
@@ -359,7 +363,7 @@ class Ui_MainWindow(object):
 
         self.dateEditToFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditToFilter.setObjectName(u"dateEditToFilter")
-        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(18, 0, 0)))
+        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(17, 0, 0)))
 
         self.verticalLayout_16.addWidget(self.dateEditToFilter)
 
@@ -577,7 +581,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
 
 
@@ -586,6 +590,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.actionQuit.setText(QCoreApplication.translate("MainWindow", u"&Quit", None))
+#if QT_CONFIG(shortcut)
+        self.actionQuit.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Q", None))
+#endif // QT_CONFIG(shortcut)
         self.groupBox_4.setTitle(QCoreApplication.translate("MainWindow", u"Top 10 Coins", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Crypto Owned", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), "")

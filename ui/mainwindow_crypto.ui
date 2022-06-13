@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>787</width>
-    <height>547</height>
+    <width>1028</width>
+    <height>592</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="mainPage">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -448,7 +448,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>18</hour>
+                        <hour>17</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -485,7 +485,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>18</hour>
+                        <hour>17</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -869,6 +869,14 @@
     </item>
    </layout>
   </widget>
+  <action name="actionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

@@ -397,18 +397,24 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
 
     @Slot()
     def on_checkBoxSpentFilter_stateChanged(self):
-        if self.checkBoxSpentFilter.isChecked():
+        if self.checkBoxSpentFilter.isChecked() or self.checkBoxReceivedFilter.isChecked() or self.checkBoxRangeDateFilter.isChecked():
             self.buttonUpdateTransaction.setEnabled(True)
+        else:
+            self.buttonUpdateTransaction.setEnabled(False)
 
     @Slot()
     def on_checkBoxReceivedFilter_stateChanged(self):
-        if self.checkBoxReceivedFilter.isChecked():
+        if self.checkBoxSpentFilter.isChecked() or self.checkBoxReceivedFilter.isChecked() or self.checkBoxRangeDateFilter.isChecked():
             self.buttonUpdateTransaction.setEnabled(True)
+        else:
+            self.buttonUpdateTransaction.setEnabled(False)
 
     @Slot()
     def on_checkBoxRangeDateFilter_stateChanged(self):
-        if self.checkBoxRangeDateFilter.isChecked():
+        if self.checkBoxSpentFilter.isChecked() or self.checkBoxReceivedFilter.isChecked() or self.checkBoxRangeDateFilter.isChecked():
             self.buttonUpdateTransaction.setEnabled(True)
+        else:
+            self.buttonUpdateTransaction.setEnabled(False)
 
     @Slot()
     def on_groupBoxFilter_stateChanged(self):

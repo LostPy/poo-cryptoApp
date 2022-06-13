@@ -176,7 +176,7 @@ class Transaction(CryptoAppObject):
             kwargs['currency_send_id'] = currency_send.id
 
         if currency_received is not None:
-            kwargs['currency_received_id'] = currency_received.id
+            kwargs['currency_receive_id'] = currency_received.id
         return [
             cls(
                 dico['idTransaction'],
