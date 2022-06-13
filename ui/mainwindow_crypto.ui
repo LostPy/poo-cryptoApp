@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>919</width>
-    <height>655</height>
+    <width>1219</width>
+    <height>833</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="mainPage">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -34,7 +34,7 @@
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <property name="iconSize">
            <size>
@@ -62,7 +62,14 @@
              </layout>
             </item>
             <item>
-             <widget class="QListWidget" name="listWidget_fav"/>
+             <widget class="QListWidget" name="listWidget_fav">
+              <property name="movement">
+               <enum>QListView::Static</enum>
+              </property>
+              <property name="resizeMode">
+               <enum>QListView::Adjust</enum>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -187,6 +194,13 @@
                   </layout>
                  </item>
                 </layout>
+               </item>
+               <item>
+                <widget class="QPushButton" name="buttonUpdateMarketChart">
+                 <property name="text">
+                  <string>Update</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -400,7 +414,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>22</hour>
+                        <hour>20</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -415,24 +429,20 @@
                   <item>
                    <layout class="QVBoxLayout" name="verticalLayout_16">
                     <item>
-                     <widget class="QDoubleSpinBox" name="spinBoxSpendFilter">
-                      <property name="minimum">
-                       <double>0.000000000000000</double>
+                     <spacer name="verticalSpacer_11">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
                       </property>
-                      <property name="maximum">
-                       <double>100000000.000000000000000</double>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Fixed</enum>
                       </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="spinBoxReceiveFilter">
-                      <property name="minimum">
-                       <double>0.000000000000000</double>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>48</height>
+                       </size>
                       </property>
-                      <property name="maximum">
-                       <double>100000000.000000000000000</double>
-                      </property>
-                     </widget>
+                     </spacer>
                     </item>
                     <item>
                      <widget class="QDateEdit" name="dateEditToFilter">
@@ -441,7 +451,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>22</hour>
+                        <hour>20</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -456,7 +466,7 @@
                  </layout>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="buttonUpdate">
+                 <widget class="QPushButton" name="buttonUpdateTransaction">
                   <property name="text">
                    <string>Update</string>
                   </property>
