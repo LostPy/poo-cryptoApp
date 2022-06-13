@@ -7,7 +7,7 @@ from crypto_core.objects import Portfolio, Currency, Cryptocurrency, Transaction
 from .models import TransactionTableModel
 from .widgets import CryptoWidget
 from crypto_core.db import CryptoDatabase
-from crypto_core import errors
+from crypto_core import errors, crypto_api
 from utils.hashstring import hash_string
 from datetime import datetime, timedelta
 from ressources import icons_rc
@@ -18,6 +18,12 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowIcon(QIcon(":/icons/finance/bitcoin-black.svg"))
+        try:
+            crypto_api.ping()
+        except errors.ApiConnectionError:
+            QMessageBox.critical(self,
+                                 "Connection error",
+                                 "Can't connect to the API, check your internet connection.")
         self.db = CryptoDatabase.create_connection()
         self.init_login_page()
         self.stackedWidget.setCurrentIndex(1)
@@ -71,7 +77,10 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
             self.listWidget_fav.setItemWidget(item, crypto_widget)
 
     def init_tab_market_chart(self):
-        self.init_market_chart()
+        try:
+            self.init_market_chart()
+        except errors.ApiConnectionError:
+            pass
         self.cryptocurrencies = list(Cryptocurrency.CRYPTOCURRENCIES.values())
         self.fiatcurrencies = list(Currency.CURRENCIES.values())
         self.comboBoxCrypto.clear()
@@ -131,9 +140,6 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
     @Slot()
     def on_buttonLogin_clicked(self):
         portfolio = self.portfolios[self.comboBoxPortfolio.currentIndex()]
-        print(portfolio.password)
-        print(hash_string(self.lineEditPw.text()))
-        print(self.lineEditPw.text())
         if portfolio.password == hash_string(self.lineEditPw.text()):
             self.portfolio = portfolio
             self.portfolio.load_currencies(self.db)
@@ -150,22 +156,22 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
     @Slot()
     def on_buttonNewPortfolio_clicked(self):
         self.stackedWidget.setCurrentIndex(2)
-        print("New Portfolio Created !")
-
-    @Slot(int)  
-    def on_stackedWidget_currentChanged(self, index):
-        print("Curent Page", index)
 
     @Slot()
     def on_buttonOkNp_clicked(self):
-        name = self.lineEditNewName.text().strip()
-        password = hash_string(self.lineEditNewPw.text().strip())
-        Portfolio.new_portfolio(name, password, self.db)
-        self.lineEditNewName.setText("")
-        self.lineEditNewPw.setText("")
-        self.stackedWidget.setCurrentIndex(1)
-        self.init_login_page()
-
+        try:
+            name = self.lineEditNewName.text().strip()
+            password = hash_string(self.lineEditNewPw.text().strip())
+            Portfolio.new_portfolio(name, password, self.db)
+            self.stackedWidget.setCurrentIndex(1)
+            self.init_login_page()
+        except errors.PortfolioAlreadyExists:
+            QMessageBox.critical(self,
+                                 "Portfolio ALready exist",
+                                 "A portfolio with the same name already exists!")
+        finally:
+            self.lineEditNewName.setText("")
+            self.lineEditNewPw.setText("")
     @Slot()
     def on_buttonCancelNp_clicked(self):
         self.lineEditNewName.setText("")
@@ -196,25 +202,40 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
                         self.lineEditCrypto.text().strip().lower(),
                         self.market_chart_fiat
                 )
+                return
+
             except errors.CurrencyApiNotFound:
                 QMessageBox.critical(self,
-                                     "Cryptocurrency not found",
+                                     "Currency not found",
                                      f"The cryptocurrency with id: '{self.lineEditCrypto.text().strip().lower()}' "
                                      "was not found in CoinGecko API.")
+                self.lineEditCrypto.setText("")
+                return
+            except errors.ApiConnectionError:
+                QMessageBox.critical(self,
+                                     "Connection Error",
+                                     "Can't connect to the API, please, check your intenet connection.")
                 return
         else:
             self.market_chart_crypto = self.cryptocurrencies[self.comboBoxCrypto.currentIndex() - 1]
 
 
         self.market_chart_days = int(self.comboBoxDays.currentText().strip())
-        #try:
-        self.init_market_chart()
-        #except :
-        #QMessageBox.critical(self,
-        #                    "Fiat currency doesn't exist",
-        #                    f"The fiat currency id: f'{self.lineEditFiat.text().strip().lower()}' "
-        #                    "doesn't exist in API")
-        #return
+        try:
+            self.init_market_chart()
+
+        except errors.ApiCurrencyNotFound:
+            QMessageBox.critical(self,
+                                 "Fiat Currency not found",
+                                 f"The fiat currency with id: '{self.lineEditFiat.text().strip().lower()}' "
+                                 "was not found in CoinGecko API.")
+            self.lineEditFiat.setText("")
+            return
+
+        except errors.ApiConnectionError:
+            QMessageBox.critical(self,
+                                 "Connection Error",
+                                 "Can't connect to the API, please, check your intenet connection.")
 
     @Slot(int)
     def on_comboBoxCrypto_currentIndexChanged(self, index: int):
@@ -253,14 +274,38 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
     @Slot()
     def on_buttonAdd_clicked(self):
         self.init_spinBox_line_edit()
-        if self.comboBoxSend.currentIndex() == 0:
-            currency_send = Cryptocurrency.from_api(self.lineEditSend.text().strip().lower())
-        else:
-            currency_send = self.currencies[self.comboBoxSend.currentIndex() - 1]
-        if self.comboBoxReceive.currentIndex() == 0:
-            currency_receive = Cryptocurrency.from_api(self.lineEditReceive.text().strip().lower())
-        else:
-            currency_receive = self.currencies[self.comboBoxReceive.currentIndex() - 1]
+        try:
+            if self.comboBoxSend.currentIndex() == 0:
+                try:
+                    currency_send = Cryptocurrency.from_api(
+                            self.lineEditSend.text().strip().lower(), Currency.CURRENCIES['euro'])
+                except errors.CurrencyNotFound:
+                   QMessageBox.critical(self,
+                                       "Cryptocurrency not found",
+                                       f"The cryptocurrency with id: '{self.lineEditSend.text().strip().lower()}' "
+                                       "was not found in CoinGecko API.")
+                   self.lineEditSend.setText("")
+                   return
+            else:
+                currency_send = self.currencies[self.comboBoxSend.currentIndex() - 1]
+            if self.comboBoxReceive.currentIndex() == 0:
+                try:
+                    currency_receive = Cryptocurrency.from_api(
+                            self.lineEditReceive.text().strip().lower(), Currency.CURRENCIES['euro'])
+                except errors.CurrencyNotFound:
+                    QMessageBox.critical(self,
+                                       "Cryptocurrency not found",
+                                       f"The cryptocurrency with id: '{self.lineEditReceive.text().strip().lower()}' "
+                                       "was not found in CoinGecko API.")
+                    self.lineEditReceive.setText("")
+                    return
+            else:
+                currency_receive = self.currencies[self.comboBoxReceive.currentIndex() - 1]
+        except errors.ApiConnectionError:
+            QMessageBox.critical(self,
+                                     "Connection Error",
+                                     "Can't connect to the API, please, check your intenet connection.")
+            return
         send_tuple = (currency_send, self.send_amount)
         receive_tuple = (currency_receive, self.receive_amount)
         self.portfolio.add_transaction(send=send_tuple,
@@ -290,7 +335,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.model_transaction.transactions = self.portfolio.get_transactions_filtered(self.db, **parameters)
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Space and self.stackedWidget.currentIndex() == 1:
+        if event.key() == Qt.Key_Enter and self.stackedWidget.currentIndex() == 1:
             self.on_buttonLogin_clicked()
 
     def closeEvent(self, event):
