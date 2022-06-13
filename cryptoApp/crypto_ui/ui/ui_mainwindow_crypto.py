@@ -18,10 +18,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateEdit,
     QDoubleSpinBox, QFrame, QGroupBox, QHBoxLayout,
-    QHeaderView, QLabel, QLineEdit, QListWidget,
-    QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
-    QSpacerItem, QSplitter, QStackedWidget, QTabWidget,
-    QTreeView, QVBoxLayout, QWidget)
+    QHeaderView, QLabel, QLineEdit, QListView,
+    QListWidget, QListWidgetItem, QMainWindow, QPushButton,
+    QSizePolicy, QSpacerItem, QSplitter, QStackedWidget,
+    QTabWidget, QTreeView, QVBoxLayout, QWidget)
 
 from ..widgets import PortfolioChart
 from ressources import icons_rc
@@ -67,6 +67,8 @@ class Ui_MainWindow(object):
 
         self.listWidget_fav = QListWidget(self.widget)
         self.listWidget_fav.setObjectName(u"listWidget_fav")
+        self.listWidget_fav.setMovement(QListView.Static)
+        self.listWidget_fav.setResizeMode(QListView.Adjust)
 
         self.verticalLayout_6.addWidget(self.listWidget_fav)
 
@@ -150,6 +152,11 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_20.addLayout(self.horizontalLayout_10)
+
+        self.buttonUpdateMarketChart = QPushButton(self.groupBox_2)
+        self.buttonUpdateMarketChart.setObjectName(u"buttonUpdateMarketChart")
+
+        self.verticalLayout_20.addWidget(self.buttonUpdateMarketChart)
 
 
         self.verticalLayout_21.addWidget(self.groupBox_2)
@@ -313,7 +320,7 @@ class Ui_MainWindow(object):
 
         self.dateEditFromFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditFromFilter.setObjectName(u"dateEditFromFilter")
-        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(22, 0, 0)))
+        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(20, 0, 0)))
 
         self.verticalLayout_14.addWidget(self.dateEditFromFilter)
 
@@ -338,7 +345,7 @@ class Ui_MainWindow(object):
 
         self.dateEditToFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditToFilter.setObjectName(u"dateEditToFilter")
-        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(22, 0, 0)))
+        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(20, 0, 0)))
 
         self.verticalLayout_16.addWidget(self.dateEditToFilter)
 
@@ -556,8 +563,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -583,6 +590,7 @@ class Ui_MainWindow(object):
         self.comboBoxDays.setItemText(4, QCoreApplication.translate("MainWindow", u"180", None))
         self.comboBoxDays.setItemText(5, QCoreApplication.translate("MainWindow", u"365", None))
 
+        self.buttonUpdateMarketChart.setText(QCoreApplication.translate("MainWindow", u"Update", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), "")
         self.groupBoxTransactions.setTitle(QCoreApplication.translate("MainWindow", u"Add Transactions", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Spend", None))
