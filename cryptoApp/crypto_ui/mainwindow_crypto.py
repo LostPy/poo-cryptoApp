@@ -70,6 +70,15 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
             item.setSizeHint(crypto_widget.sizeHint())
             self.listWidget_fav.setItemWidget(item, crypto_widget)
 
+    def init_top10_crypto(self):
+        currencies = Cryptocurrency.get_top_coins_market(Currency.CURRENCIES['dollar'])
+        for currency in currencies:
+            crypto_widget = CryptoWidget(currency, 0, self.listWidget_top10)
+            item = QListWidgetItem(self.listWidget_top10)
+            item.setSizeHint(crypto_widget.sizeHint())
+            self.listWidget_top10.setItemWidget(item, crypto_widget)
+
+
     def init_tab_market_chart(self):
         self.init_market_chart()
         self.cryptocurrencies = list(Cryptocurrency.CRYPTOCURRENCIES.values())
@@ -143,6 +152,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
             self.init_tab_transaction()
             self.init_comboBox_currency()
             self.init_list_currencies()
+            self.init_top10_crypto()
             self.stackedWidget.setCurrentIndex(0)
         else:
             QMessageBox.critical(self, "Bad password", "This password does not correspond to this portfolio")
@@ -299,6 +309,30 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         event.accept()
 
 
+    @Slot()
+    def on_checkBoxSpentFilter_stateChanged(self):
+        if self.checkBoxSpentFilter.isChecked():
+            self.buttonUpdateTransaction.setEnabled(True)
+
+    @Slot()
+    def on_checkBoxReceivedFilter_stateChanged(self):
+        if self.checkBoxReceivedFilter.isChecked():
+            self.buttonUpdateTransaction.setEnabled(True)
+
+    @Slot()
+    def on_checkBoxRangeDateFilter_stateChanged(self):
+        if self.checkBoxRangeDateFilter.isChecked():
+            self.buttonUpdateTransaction.setEnabled(True)
+
+    @Slot()
+    def on_groupBoxFilter_stateChanged(self):
+        if self.groupBoxFilter.isChecked == False:
+            self.checkBoxSpentFilter.setEnabled(False)
+            self.checkBoxReceivedFilter.setEnabled(False)
+            self.checkBoxRangeDateFilter.setEnabled(False)
+
+    
+    
 
 if __name__ == "__main__":
     from PySide6.QtWidgets import QApplication, QWidget
