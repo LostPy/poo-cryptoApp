@@ -38,7 +38,6 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.comboBoxPortfolio.addItems([portfolio.name for portfolio in self.portfolios])
         self.buttonDelPortfolio.setEnabled(len(self.portfolios) > 0)
         self.buttonLogin.setEnabled(len(self.portfolios) > 0)
-        self.buttonAdd.setEnabled(True)
 
     def init_model_transaction(self):
         end_date = datetime.now()
@@ -49,6 +48,8 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
 
     def init_tab_transaction(self):
         self.init_model_transaction()
+        self.buttonAdd.setEnabled(False)
+        self.buttonUpdateFilter.setEnabled(False)
 
     def init_comboBox_currency(self):
         self.currencies = list(Currency.CURRENCIES.values()) + list(Cryptocurrency.CRYPTOCURRENCIES.values())
@@ -68,6 +69,16 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
             crypto_widget = CryptoWidget(currency, amount, self.listWidget_fav)
             item.setSizeHint(crypto_widget.sizeHint())
             self.listWidget_fav.setItemWidget(item, crypto_widget)
+
+    def init_tab_market_chart(self):
+        self.init_market_chart()
+        self.cryptocurrencies = list(Cryptocurrency.CRYPTOCURRENCIES.values())
+        self.fiatcurrencies = list(Currency.CURRENCIES.values())
+        self.comboBoxCrypto.clear()
+        self.comboBoxFiat.clear()
+        self.comboBoxCrypto.addItems(["Other"] + [c.name for c in self.cryptocurrencies])
+        self.comboBoxFiat.addItems(["Other"] + [c.name for c in self.fiatcurrencies])
+        self.buttonUpdateMarketChart.setEnabled(False)
 
     def init_market_chart(self):
         if self.market_chart_crypto:
@@ -103,20 +114,38 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
             self.lineEditReceive.setText(self.currencies[index - 1].name)
             self.lineEditReceive.setEnabled(False)
 
+    @Slot(str)
+    def on_lineEditSend_textChanged(self, text: str):
+        if text.strip() and self.lineEditReceive.text().strip():
+            self.buttonAdd.setEnabled(True)
+        else:
+            self.buttonAdd.setEnabled(False)
+
+    @Slot(str)
+    def on_lineEditReceive_textChanged(self, text: str):
+        if text.strip() and self.lineEditSend.text().strip():
+            self.buttonAdd.setEnabled(True)
+        else:
+            self.buttonAdd.setEnabled(False)
+
     @Slot()
     def on_buttonLogin_clicked(self):
         portfolio = self.portfolios[self.comboBoxPortfolio.currentIndex()]
+        print(portfolio.password)
+        print(hash_string(self.lineEditPw.text()))
+        print(self.lineEditPw.text())
         if portfolio.password == hash_string(self.lineEditPw.text()):
             self.portfolio = portfolio
             self.portfolio.load_currencies(self.db)
             self.portfolio_chart.set_portfolio(self.portfolio,
                                                title="Cryptomonaies possédées")
-            self.init_market_chart()
+            self.init_tab_market_chart()
             self.init_tab_transaction()
             self.init_comboBox_currency()
             self.init_list_currencies()
             self.stackedWidget.setCurrentIndex(0)
-            print("Login Succesfull")
+        else:
+            QMessageBox.critical(self, "Bad password", "This password does not correspond to this portfolio")
 
     @Slot()
     def on_buttonNewPortfolio_clicked(self):
@@ -130,7 +159,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
     @Slot()
     def on_buttonOkNp_clicked(self):
         name = self.lineEditNewName.text().strip()
-        password = hash_string(self.lineEditNewName.text().strip())
+        password = hash_string(self.lineEditNewPw.text().strip())
         Portfolio.new_portfolio(name, password, self.db)
         self.lineEditNewName.setText("")
         self.lineEditNewPw.setText("")
@@ -152,6 +181,74 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
             portfolio = self.portfolios[self.comboBoxPortfolio.currentIndex()]
             portfolio.delete(self.db)
             self.init_login_page()
+
+    @Slot()
+    def on_buttonUpdateMarketChart_clicked(self):
+        if self.comboBoxFiat.currentIndex() == 0:
+            fiat = self.lineEditFiat.text().strip().lower()
+            self.market_chart_fiat = Currency(id_=fiat, name=fiat.capitalize(), ticker=fiat)
+        else:
+            self.market_chart_fiat = self.fiatcurrencies[self.comboBoxFiat.currentIndex() - 1]
+        
+        if self.comboBoxCrypto.currentIndex() == 0:
+            try:
+                self.market_chart_crypto = Cryptocurrency.from_api(
+                        self.lineEditCrypto.text().strip().lower(),
+                        self.market_chart_fiat
+                )
+            except errors.CurrencyApiNotFound:
+                QMessageBox.critical(self,
+                                     "Cryptocurrency not found",
+                                     f"The cryptocurrency with id: '{self.lineEditCrypto.text().strip().lower()}' "
+                                     "was not found in CoinGecko API.")
+                return
+        else:
+            self.market_chart_crypto = self.cryptocurrencies[self.comboBoxCrypto.currentIndex() - 1]
+
+
+        self.market_chart_days = int(self.comboBoxDays.currentText().strip())
+        #try:
+        self.init_market_chart()
+        #except :
+        #QMessageBox.critical(self,
+        #                    "Fiat currency doesn't exist",
+        #                    f"The fiat currency id: f'{self.lineEditFiat.text().strip().lower()}' "
+        #                    "doesn't exist in API")
+        #return
+
+    @Slot(int)
+    def on_comboBoxCrypto_currentIndexChanged(self, index: int):
+        if index == 0:
+            self.lineEditCrypto.setEnabled(True)
+            self.lineEditCrypto.setText("")
+            self.buttonUpdateMarketChart.setEnabled(False)
+        else:
+            self.lineEditCrypto.setEnabled(False)
+            self.lineEditCrypto.setText(self.cryptocurrencies[index - 1].name)
+    
+    @Slot(int)
+    def on_comboBoxFiat_currentIndexChanged(self, index: int):
+        if index == 0:
+            self.lineEditFiat.setEnabled(True)
+            self.lineEditFiat.setText("")
+            self.buttonUpdateMarketChart.setEnabled(False)
+        else:
+            self.lineEditFiat.setEnabled(False)
+            self.lineEditFiat.setText(self.fiatcurrencies[index - 1].name)
+
+    @Slot(str)
+    def on_lineEditCrypto_textChanged(self, text: str):
+        if text.strip() and self.lineEditFiat.text().strip():
+            self.buttonUpdateMarketChart.setEnabled(True)
+        else:
+            self.buttonUpdateMarketChart.setEnabled(False)
+ 
+    @Slot(str)
+    def on_lineEditFiat_textChanged(self, text: str):
+        if text.strip() and self.lineEditCrypto.text().strip():
+            self.buttonUpdateMarketChart.setEnabled(True)
+        else:
+            self.buttonUpdateMarketChart.setEnabled(False)           
 
     @Slot()
     def on_buttonAdd_clicked(self):

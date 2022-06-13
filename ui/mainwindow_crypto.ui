@@ -34,7 +34,7 @@
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <property name="iconSize">
            <size>
@@ -194,6 +194,13 @@
                   </layout>
                  </item>
                 </layout>
+               </item>
+               <item>
+                <widget class="QPushButton" name="buttonUpdateMarketChart">
+                 <property name="text">
+                  <string>Update</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -407,7 +414,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>21</hour>
+                        <hour>20</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -448,7 +455,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>21</hour>
+                        <hour>20</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -463,7 +470,7 @@
                  </layout>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="buttonUpdate">
+                 <widget class="QPushButton" name="buttonUpdateFilter">
                   <property name="text">
                    <string>Update</string>
                   </property>

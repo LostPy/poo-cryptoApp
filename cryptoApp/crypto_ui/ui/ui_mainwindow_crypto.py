@@ -153,6 +153,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_20.addLayout(self.horizontalLayout_10)
 
+        self.buttonUpdateMarketChart = QPushButton(self.groupBox_2)
+        self.buttonUpdateMarketChart.setObjectName(u"buttonUpdateMarketChart")
+
+        self.verticalLayout_20.addWidget(self.buttonUpdateMarketChart)
+
 
         self.verticalLayout_21.addWidget(self.groupBox_2)
 
@@ -315,7 +320,7 @@ class Ui_MainWindow(object):
 
         self.dateEditFromFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditFromFilter.setObjectName(u"dateEditFromFilter")
-        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(21, 0, 0)))
+        self.dateEditFromFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(20, 0, 0)))
 
         self.verticalLayout_14.addWidget(self.dateEditFromFilter)
 
@@ -340,7 +345,7 @@ class Ui_MainWindow(object):
 
         self.dateEditToFilter = QDateEdit(self.groupBoxFilter)
         self.dateEditToFilter.setObjectName(u"dateEditToFilter")
-        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(21, 0, 0)))
+        self.dateEditToFilter.setMinimumDateTime(QDateTime(QDate(2007, 12, 31), QTime(20, 0, 0)))
 
         self.verticalLayout_16.addWidget(self.dateEditToFilter)
 
@@ -350,10 +355,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_15.addLayout(self.horizontalLayout_9)
 
-        self.buttonUpdate = QPushButton(self.groupBoxFilter)
-        self.buttonUpdate.setObjectName(u"buttonUpdate")
+        self.buttonUpdateFilter = QPushButton(self.groupBoxFilter)
+        self.buttonUpdateFilter.setObjectName(u"buttonUpdateFilter")
 
-        self.verticalLayout_15.addWidget(self.buttonUpdate)
+        self.verticalLayout_15.addWidget(self.buttonUpdateFilter)
 
         self.verticalSpacer_8 = QSpacerItem(20, 384, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -559,7 +564,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackedWidget.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -585,6 +590,7 @@ class Ui_MainWindow(object):
         self.comboBoxDays.setItemText(4, QCoreApplication.translate("MainWindow", u"180", None))
         self.comboBoxDays.setItemText(5, QCoreApplication.translate("MainWindow", u"365", None))
 
+        self.buttonUpdateMarketChart.setText(QCoreApplication.translate("MainWindow", u"Update", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), "")
         self.groupBoxTransactions.setTitle(QCoreApplication.translate("MainWindow", u"Add Transactions", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Spend", None))
@@ -619,7 +625,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.dateEditToFilter.setToolTip(QCoreApplication.translate("MainWindow", u"RangeDate from ... to ...", None))
 #endif // QT_CONFIG(tooltip)
-        self.buttonUpdate.setText(QCoreApplication.translate("MainWindow", u"Update", None))
+        self.buttonUpdateFilter.setText(QCoreApplication.translate("MainWindow", u"Update", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "")
         self.groupBoxLogin.setTitle(QCoreApplication.translate("MainWindow", u"Login", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Portfolio", None))
