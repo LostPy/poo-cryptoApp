@@ -821,6 +821,7 @@ class CryptoDatabase:
             raise errors.DatabaseAlreadyExists(cls.PATH)
 
         elif cls.PATH.exists():
+            self.LOGGER.debug("Remove existing database to re-initialize")
             cls.remove()
 
         try:
