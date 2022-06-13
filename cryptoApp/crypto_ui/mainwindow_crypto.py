@@ -1,18 +1,23 @@
 from .ui import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QMessageBox, QListWidgetItem
 from PySide6.QtCore import Slot, Qt
+from PySide6.QtGui import QIcon
+from PySide6.QtCharts import QChart, QLineSeries, QDateTimeAxis, QValueAxis
 from crypto_core.objects import Portfolio, Currency, Cryptocurrency, Transaction
 from .models import TransactionTableModel
 from .widgets import CryptoWidget
 from crypto_core.db import CryptoDatabase
+from crypto_core import errors
 from utils.hashstring import hash_string
 from datetime import datetime, timedelta
+from ressources import icons_rc
 
 
 class MainWindowCrypto(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setWindowIcon(QIcon(":/icons/finance/bitcoin-black.svg"))
         self.db = CryptoDatabase.create_connection()
         self.init_login_page()
         self.stackedWidget.setCurrentIndex(1)
@@ -20,6 +25,12 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.portfolio = None
         self.send_amount = 0
         self.receive_amount = 0
+        self.market_chart_days= 30
+        try:
+            self.market_chart_crypto = Cryptocurrency.from_db('bitcoin', self.db)
+        except errors.CurrencyDbNotFound:
+            self.market_chart_crypto = None
+        self.market_chart_fiat = Currency.CURRENCIES['euro']
 
     def init_login_page(self):
         self.comboBoxPortfolio.clear()
@@ -52,12 +63,27 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         self.receive_amount = self.spinBoxReceive.value()
 
     def init_list_currencies(self):
-        for currency, amount in self.portfolio.cryptocurrencies.items():
+        for currency, amount in sorted(self.portfolio.cryptocurrencies.items(), key=lambda item: item[0].rank):
             item = QListWidgetItem(self.listWidget_fav)
             crypto_widget = CryptoWidget(currency, amount, self.listWidget_fav)
             item.setSizeHint(crypto_widget.sizeHint())
             self.listWidget_fav.setItemWidget(item, crypto_widget)
 
+    def init_market_chart(self):
+        if self.market_chart_crypto:
+            data = self.market_chart_crypto.get_market_chart(
+                    self.market_chart_fiat, self.market_chart_days)
+            series = QLineSeries(name=self.market_chart_crypto.name)
+            for x, y in zip(data[:, 0], data[:, 1]):
+                series.append(x, y)
+            x_axis = QDateTimeAxis()
+            x_axis.setFormat("dd/MM/yyyy h:mm")
+            y_axis = QValueAxis()
+            chart = QChart()
+            chart.addSeries(series)
+            chart.setAxisX(x_axis, series)
+            chart.setAxisY(y_axis, series)
+            self.graphicsView.setChart(chart)
 
     @Slot(int)
     def on_comboBoxSend_currentIndexChanged(self, index: int):
@@ -85,6 +111,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
             self.portfolio.load_currencies(self.db)
             self.portfolio_chart.set_portfolio(self.portfolio,
                                                title="Cryptomonaies possédées")
+            self.init_market_chart()
             self.init_tab_transaction()
             self.init_comboBox_currency()
             self.init_list_currencies()

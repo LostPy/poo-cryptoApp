@@ -126,7 +126,7 @@ class Cryptocurrency(Currency):
         -------
         pandas.DataFrame : price evolution of currency in a table.
         """
-        return crypto_api.get_market_chart(self.id, vs_currency.id, days)
+        return crypto_api.get_market_chart(self.id, vs_currency.gecko_id, days)
 
     def get_market_chart_by_range(self,
                                   vs_currency: Currency,
