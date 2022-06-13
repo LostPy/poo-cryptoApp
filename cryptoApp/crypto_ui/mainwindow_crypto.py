@@ -17,7 +17,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setWindowIcon(QIcon(":/icons/finance/bitcoin-black.svg"))
+        self.setWindowIcon(QIcon(":/finance/bitcoin-black.svg"))
         try:
             crypto_api.ping()
         except errors.ApiConnectionError:
