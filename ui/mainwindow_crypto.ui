@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="mainPage">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -470,7 +470,7 @@
                  </layout>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="buttonUpdateFilter">
+                 <widget class="QPushButton" name="buttonUpdate">
                   <property name="text">
                    <string>Update</string>
                   </property>

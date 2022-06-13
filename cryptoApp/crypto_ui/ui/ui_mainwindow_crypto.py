@@ -355,10 +355,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_15.addLayout(self.horizontalLayout_9)
 
-        self.buttonUpdateFilter = QPushButton(self.groupBoxFilter)
-        self.buttonUpdateFilter.setObjectName(u"buttonUpdateFilter")
+        self.buttonUpdate = QPushButton(self.groupBoxFilter)
+        self.buttonUpdate.setObjectName(u"buttonUpdate")
 
-        self.verticalLayout_15.addWidget(self.buttonUpdateFilter)
+        self.verticalLayout_15.addWidget(self.buttonUpdate)
 
         self.verticalSpacer_8 = QSpacerItem(20, 384, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -563,7 +563,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(2)
 
 
@@ -625,7 +625,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.dateEditToFilter.setToolTip(QCoreApplication.translate("MainWindow", u"RangeDate from ... to ...", None))
 #endif // QT_CONFIG(tooltip)
-        self.buttonUpdateFilter.setText(QCoreApplication.translate("MainWindow", u"Update", None))
+        self.buttonUpdate.setText(QCoreApplication.translate("MainWindow", u"Update", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "")
         self.groupBoxLogin.setTitle(QCoreApplication.translate("MainWindow", u"Login", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Portfolio", None))
