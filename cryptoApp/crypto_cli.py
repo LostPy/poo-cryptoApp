@@ -26,7 +26,7 @@ if not CryptoDatabase.PATH.exists():
     CryptoDatabase.init_database()
     database = CryptoDatabase.create_connection()
     Currency.init_currencies(database)
-    # Add a base of cryptocurrencies in database
+    # Ajoute une base de crypto dans la bdd
     Cryptocurrency.get_top_coins_market(Currency.CURRENCIES['euro'], database=database)
     database.close()
     del database
@@ -127,9 +127,9 @@ def login(portfolio, password):
         click.style("login with success to the portfolio ", fg='green')
         + click.style(portfolio.name, bold=True))
 
-    portfolio.load_currencies(database)  # load registered currencies of portfolio
+    portfolio.load_currencies(database)  # Charge les monaies du portefeuille
 
-    click.clear()  # clear the screen
+    click.clear()  # clear l'écran
     click.echo(f"\n\n{'=' * 20}\n{' ' * 8}Menu\n{'=' * 20}\n")
 
     quit = False
@@ -143,7 +143,7 @@ def login(portfolio, password):
         """)
         choice = int(click.prompt("Your choice", type=click.Choice([str(i) for i in range(1, 6)])))
 
-        if choice == 1:  # Add a transaction
+        if choice == 1:  # Ajout d'une transaction
             # User input
             # ----------
             currency_id_send = click.prompt(

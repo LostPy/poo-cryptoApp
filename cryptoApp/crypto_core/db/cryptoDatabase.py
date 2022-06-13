@@ -492,7 +492,10 @@ class CryptoDatabase:
             raise errors.DbRequestMissingData(e.args[0])
 
         cursor = self.connection.cursor()
-        cursor.execute(sql_instruction, values)
+        try:
+            cursor.execute(sql_instruction, values)
+        except sqlite3.IntegrityError:
+            raise errors.PortfolioAlreadyExists(portfolio['name'])
         id_ = cursor.lastrowid
 
         if commit:
