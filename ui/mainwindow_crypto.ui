@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1219</width>
-    <height>833</height>
+    <width>787</width>
+    <height>547</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="mainPage">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -50,26 +50,60 @@
            <attribute name="title">
             <string/>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_6">
+           <layout class="QVBoxLayout" name="verticalLayout_24">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <layout class="QVBoxLayout" name="verticalLayout_23">
               <item>
-               <widget class="PortfolioChart" name="portfolio_chart"/>
+               <layout class="QHBoxLayout" name="horizontalLayout_6">
+                <item>
+                 <widget class="PortfolioChart" name="portfolio_chart"/>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_4">
+                  <property name="font">
+                   <font>
+                    <pointsize>13</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="title">
+                   <string>Top 10 Coins</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_22">
+                   <item>
+                    <widget class="QListWidget" name="listWidget_top10"/>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
-               <widget class="QListWidget" name="listWidget_top10"/>
+               <widget class="QGroupBox" name="groupBox_3">
+                <property name="font">
+                 <font>
+                  <pointsize>13</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="title">
+                 <string>Crypto Owned</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <item>
+                  <widget class="QListWidget" name="listWidget_fav">
+                   <property name="movement">
+                    <enum>QListView::Static</enum>
+                   </property>
+                   <property name="resizeMode">
+                    <enum>QListView::Adjust</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
               </item>
              </layout>
-            </item>
-            <item>
-             <widget class="QListWidget" name="listWidget_fav">
-              <property name="movement">
-               <enum>QListView::Static</enum>
-              </property>
-              <property name="resizeMode">
-               <enum>QListView::Adjust</enum>
-              </property>
-             </widget>
             </item>
            </layout>
           </widget>
@@ -414,7 +448,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>19</hour>
+                        <hour>18</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -451,7 +485,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>19</hour>
+                        <hour>18</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>

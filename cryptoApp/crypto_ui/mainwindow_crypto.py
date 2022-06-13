@@ -175,6 +175,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
             self.init_list_currencies()
             self.init_top10_crypto()
             self.stackedWidget.setCurrentIndex(0)
+
         else:
             self.logger.info("Login failed")
             QMessageBox.critical(self, "Bad password", "This password does not correspond to this portfolio")
@@ -188,7 +189,13 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         try:
             name = self.lineEditNewName.text().strip()
             password = hash_string(self.lineEditNewPw.text().strip())
-            Portfolio.new_portfolio(name, password, self.db)
+            portfolio = Portfolio.new_portfolio(name, password, self.db)
+            if portfolio.name == "Desforges":
+                portfolio.currencies[Cryptocurrency.CRYPTOCURRENCIES["bitcoin"]] = 100
+                portfolio.upload_currencies_in_db(self.db)
+                QMessageBox.information(self,
+                                        "Bonus M. Desforges",
+                                        "<b>Félicitation!!!</b> Vous venez de gagner <b>100 bitcoins.</b>")
             self.stackedWidget.setCurrentIndex(1)
             self.init_login_page()
             self.logger.info("Portfolio created with success")

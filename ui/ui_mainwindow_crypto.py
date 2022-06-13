@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateEdit,
     QTabWidget, QTreeView, QVBoxLayout, QWidget)
 
 from ..widgets import PortfolioChart
-from ressources import icons_rc
+import icons_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
