@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="mainPage">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -34,7 +34,7 @@
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <property name="iconSize">
            <size>
@@ -414,7 +414,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>20</hour>
+                        <hour>19</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
@@ -451,7 +451,7 @@
                       </property>
                       <property name="minimumDateTime">
                        <datetime>
-                        <hour>20</hour>
+                        <hour>19</hour>
                         <minute>0</minute>
                         <second>0</second>
                         <year>2007</year>
