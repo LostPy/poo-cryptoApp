@@ -161,10 +161,10 @@ class Cryptocurrency(Currency):
             dictionary with data from API.
         """
         self.name = d['name']
-        self.ticker = d['symbol']
-        self.price = d['current_price']
+        self.ticker = d['ticker']
+        self.price = d['price']
         self.circulating_supply = int(d['circulating_supply'])
-        self.rank = d['market_cap_rank']
+        self.rank = d['rank']
         self.last_update = datetime.now()
         return self
 
