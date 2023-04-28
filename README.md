@@ -1,6 +1,6 @@
 # CryptoApp
 
-Une application pour enregistrer ses transactions de cryptomonaies et visualiser le cour de cryptomonaie.
+Une application pour enregistrer ses transactions de cryptomonnaies et visualiser le cours de cryptomonaie.
 
 
 ## Requirements
