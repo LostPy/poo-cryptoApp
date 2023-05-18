@@ -189,13 +189,7 @@ class MainWindowCrypto(QMainWindow, Ui_MainWindow):
         try:
             name = self.lineEditNewName.text().strip()
             password = hash_string(self.lineEditNewPw.text().strip())
-            portfolio = Portfolio.new_portfolio(name, password, self.db)
-            if portfolio.name == "Desforges":
-                portfolio.currencies[Cryptocurrency.CRYPTOCURRENCIES["bitcoin"]] = 100
-                portfolio.upload_currencies_in_db(self.db)
-                QMessageBox.information(self,
-                                        "Bonus M. Desforges",
-                                        "<b>Félicitation!!!</b> Vous venez de gagner <b>100 bitcoins.</b>")
+            Portfolio.new_portfolio(name, password, self.db)
             self.stackedWidget.setCurrentIndex(1)
             self.init_login_page()
             self.logger.info("Portfolio created with success")
